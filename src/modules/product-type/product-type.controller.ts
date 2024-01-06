@@ -7,7 +7,8 @@ import {
   Patch,
   Post,
 } from "@nestjs/common";
-import parseResponse, { IResponseStructure } from "src/common/parseResponse";
+import parseResponse from "src/common/parseResponse";
+import { IResponseStructure } from "src/utils/interface";
 import { CreateProductTypeDto } from "./dto/create-type.dto";
 import { UpdateProductTypeDto } from "./dto/update-type.dto";
 import { ProductTypeService } from "./product-type.service";
@@ -19,7 +20,7 @@ export class ProductTypeController {
   @Post()
   async create(@Body() createProductTypeDto: CreateProductTypeDto) {
     const res = await this.productTypeService.create(createProductTypeDto);
-    return parseResponse({ data: res._id, message: "创建成功！" });
+    return parseResponse({ data: res });
   }
 
   @Get()

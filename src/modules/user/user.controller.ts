@@ -45,8 +45,7 @@ export class UserController {
     }
     await this.userService.create(createUserDto);
     return parseResponse({
-      statusCode: 200,
-      message: "注册成功！",
+      data: "注册成功！",
     });
   }
 
@@ -64,9 +63,7 @@ export class UserController {
           const payload = { sub: res._id, username: res.username };
           const access_token = await this.jwtService.signAsync(payload);
           return parseResponse({
-            statusCode: 200,
             data: { access_token },
-            message: "登陆成功！",
           });
         }
       }
@@ -113,8 +110,7 @@ export class UserController {
   ) {
     this.userService.update(params.username, updateUserDto);
     return parseResponse({
-      statusCode: 200,
-      message: "密码更改成功！",
+      data: "密码更改成功！",
     });
   }
 
@@ -128,8 +124,7 @@ export class UserController {
     const { username } = params;
     this.userService.remove(username);
     return parseResponse({
-      statusCode: 200,
-      message: "用户被删除",
+      data: "用户被删除",
     });
   }
 }

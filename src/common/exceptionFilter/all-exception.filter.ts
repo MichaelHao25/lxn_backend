@@ -4,9 +4,13 @@ import {
   ExceptionFilter,
   HttpException,
   HttpStatus,
-} from '@nestjs/common';
-import { HttpAdapterHost } from '@nestjs/core';
+} from "@nestjs/common";
+import { HttpAdapterHost } from "@nestjs/core";
+import { IErrorShowType, IResponseStructure } from "src/utils/interface";
 
+/**
+ * 全局范围内的过滤器
+ */
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
   constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
@@ -15,20 +19,30 @@ export class AllExceptionsFilter implements ExceptionFilter {
     // In certain situations `httpAdapter` might not be available in the
     // constructor method, thus we should resolve it here.
     const { httpAdapter } = this.httpAdapterHost;
-
     const ctx = host.switchToHttp();
-
-    const httpStatus =
-      exception instanceof HttpException
-        ? exception.getStatus()
-        : HttpStatus.INTERNAL_SERVER_ERROR;
-
-    const responseBody = {
-      statusCode: httpStatus,
-      timestamp: new Date().toISOString(),
-      path: httpAdapter.getRequestUrl(ctx.getRequest()),
+    const responseBody: IResponseStructure = {
+      success: false,
     };
-
-    httpAdapter.reply(ctx.getResponse(), responseBody, httpStatus);
+    if (exception instanceof HttpException) {
+      /**
+       * http 异常
+       */
+      responseBody.errorCode = exception.getStatus();
+      responseBody.errorMessage = exception.message;
+      const response = exception.getResponse();
+      if (response instanceof Object) {
+        const { showType = undefined } = response as {
+          showType: IErrorShowType;
+        };
+        responseBody.showType = showType;
+      }
+    } else {
+      /**
+       * 未知异常
+       */
+      responseBody.errorCode = HttpStatus.INTERNAL_SERVER_ERROR;
+      responseBody.errorMessage = "未知错误";
+    }
+    httpAdapter.reply(ctx.getResponse(), responseBody, responseBody.errorCode);
   }
 }

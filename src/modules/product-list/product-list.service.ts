@@ -1,7 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import parseResponse, { IResponseStructure } from "src/common/parseResponse";
+import parseResponse from "src/common/parseResponse";
+import { IResponseStructure } from "src/utils/interface";
 import { CreateProductListDto } from "./dto/create-product-list.dto";
 import { UpdateProductListDto } from "./dto/update-product-list.dto";
 import {

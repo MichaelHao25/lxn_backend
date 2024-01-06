@@ -57,10 +57,13 @@ async function bootstrap(https: boolean = false) {
     },
   });
   /**
-   * 异常过滤
+   * 异常过滤的几种方法，现在使用app.module.ts里面去过滤全局异常
+   *
+   * useGlobalFilters()方法不会为网关或混合应用程序设置过滤器。
    */
-//   const { httpAdapter } = app.get(HttpAdapterHost);
-//   app.useGlobalFilters(new AllExceptionsFilter(app.get(HttpAdapterHost)));
+  //   app.useGlobalFilters(new HttpExceptionFilter());
+  //   const { httpAdapter } = app.get(HttpAdapterHost);
+  //   app.useGlobalFilters(new AllExceptionsFilter(app.get(HttpAdapterHost)));
   /**
    * 设置默认前缀，排除/
    */

@@ -1,10 +1,11 @@
 import { Module } from "@nestjs/common";
-import { APP_GUARD } from "@nestjs/core";
+import { APP_FILTER, APP_GUARD } from "@nestjs/core";
 import { MongooseModule } from "@nestjs/mongoose";
 import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
 
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
+import { AllExceptionsFilter } from "./common/exceptionFilter/all-exception.filter";
 import { AuthGuard } from "./common/guard/auth.guard";
 import database from "./config/database";
 import { ProductListModule } from "./modules/product-list/product-list.module";
@@ -41,6 +42,10 @@ import { UserModule } from "./modules/user/user.module";
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: AllExceptionsFilter,
     },
   ],
 })
