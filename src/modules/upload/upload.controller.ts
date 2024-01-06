@@ -10,7 +10,7 @@ import { Query, Req, Res } from "@nestjs/common/decorators";
 import { FastifyReply, FastifyRequest } from "fastify";
 import * as fs from "node:fs";
 import { Public } from "src/common/decorators/public.decorator";
-import parseResponse from "src/common/parseResponse";
+import parseResponse from "src/common/parseSuccessResponse";
 import { IUpdateFile } from "./interface";
 import { UploadService } from "./upload.service";
 // const pump = util.promisify(stream.pipeline);

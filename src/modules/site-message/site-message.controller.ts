@@ -7,7 +7,7 @@ import {
   Patch,
   Post,
 } from "@nestjs/common";
-import parseResponse from "src/common/parseResponse";
+import parseResponse from "src/common/parseSuccessResponse";
 import { CreateSiteMessageDto } from "./dto/create-site-message.dto";
 import { UpdateSiteMessageDto } from "./dto/update-site-message.dto";
 import { SiteMessageService } from "./site-message.service";
@@ -42,6 +42,6 @@ export class SiteMessageController {
   @Delete(":_id")
   async remove(@Param("_id") _id: string) {
     this.siteMessageService.remove(_id);
-    return parseResponse("删除成功!");
+    return parseResponse({ data: "删除成功!" });
   }
 }

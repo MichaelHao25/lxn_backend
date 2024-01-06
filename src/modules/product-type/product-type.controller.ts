@@ -7,7 +7,7 @@ import {
   Patch,
   Post,
 } from "@nestjs/common";
-import parseResponse from "src/common/parseResponse";
+import parseResponse from "src/common/parseSuccessResponse";
 import { IResponseStructure } from "src/utils/interface";
 import { CreateProductTypeDto } from "./dto/create-type.dto";
 import { UpdateProductTypeDto } from "./dto/update-type.dto";

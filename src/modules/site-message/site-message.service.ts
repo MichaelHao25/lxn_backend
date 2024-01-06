@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import parseResponse from "src/common/parseResponse";
+import parseResponse from "src/common/parseSuccessResponse";
 import { CreateSiteMessageDto } from "./dto/create-site-message.dto";
 import { UpdateSiteMessageDto } from "./dto/update-site-message.dto";
 import {
@@ -40,6 +40,6 @@ export class SiteMessageService {
 
   async remove(_id: string) {
     this.siteMessageModel.deleteOne({ _id });
-    return parseResponse("删除成功!");
+    return parseResponse({ data: "删除成功!" });
   }
 }

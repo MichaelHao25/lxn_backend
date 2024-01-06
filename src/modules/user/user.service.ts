@@ -12,6 +12,11 @@ import { User, UserDocument } from "./entities/user.entity";
 export class UserService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
   /**
+   * 登出
+   * TODO 暂时没有登出，做一个黑名单，过期的token存储进去，当进入黑名单的token就给他干掉，一天执行一次，到期就给删除掉
+   */
+  async logout() {}
+  /**
    * 创建一个新用户
    * @param createUserDto 用户信息
    * @returns UserDocument

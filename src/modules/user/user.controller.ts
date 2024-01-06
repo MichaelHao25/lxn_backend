@@ -14,7 +14,7 @@ import { HttpStatus } from "@nestjs/common/enums";
 import { JwtService } from "@nestjs/jwt";
 import { IsNotEmpty, IsString } from "class-validator";
 import { Public } from "src/common/decorators/public.decorator";
-import parseResponse from "src/common/parseResponse";
+import parseResponse from "src/common/parseSuccessResponse";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { UserService } from "./user.service";
@@ -31,6 +31,13 @@ export class UserController {
     private jwtService: JwtService
   ) {}
 
+  @Get("logout")
+  async logout() {
+    const user = await this.userService.logout();
+    return parseResponse({
+      data: "退出成功！",
+    });
+  }
   /**
    * 用户注册
    */
