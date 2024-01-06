@@ -7,6 +7,7 @@ import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { AuthGuard } from "./common/guard/auth.guard";
 import database from "./config/database";
+import { ProductListModule } from "./modules/product-list/product-list.module";
 import { ProductTypeModule } from "./modules/product-type/product-type.module";
 import { SiteMessageModule } from "./modules/site-message/site-message.module";
 import { UploadModule } from "./modules/upload/upload.module";
@@ -28,12 +29,7 @@ import { UserModule } from "./modules/user/user.module";
     UserModule,
     UploadModule,
     ProductTypeModule,
-    /**
-     * 下面的模块都不是本项目内的
-     */
-    // ListModule,
-    // VvtoolModule,
-    // OrderModule,
+    ProductListModule,
   ],
   controllers: [AppController],
   providers: [

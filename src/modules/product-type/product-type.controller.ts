@@ -7,12 +7,12 @@ import {
   Patch,
   Post,
 } from "@nestjs/common";
-import parseResponse, { IResponse } from "src/common/parseResponse";
+import parseResponse, { IResponseStructure } from "src/common/parseResponse";
 import { CreateProductTypeDto } from "./dto/create-type.dto";
 import { UpdateProductTypeDto } from "./dto/update-type.dto";
 import { ProductTypeService } from "./product-type.service";
 
-@Controller("type")
+@Controller("product-type")
 export class ProductTypeController {
   constructor(private readonly productTypeService: ProductTypeService) {}
 
@@ -41,7 +41,7 @@ export class ProductTypeController {
   }
 
   @Delete(":_id")
-  async remove(@Param("_id") _id: string): Promise<IResponse<string>> {
+  async remove(@Param("_id") _id: string): Promise<IResponseStructure<string>> {
     return await this.productTypeService.remove(_id);
   }
 }

@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import parseResponse, { IResponse } from "src/common/parseResponse";
+import parseResponse, { IResponseStructure } from "src/common/parseResponse";
 import { CreateProductTypeDto } from "./dto/create-type.dto";
 import { UpdateProductTypeDto } from "./dto/update-type.dto";
 import {
@@ -46,7 +46,7 @@ export class ProductTypeService {
   async update(
     _id: string,
     updateProductTypeDto: UpdateProductTypeDto
-  ): Promise<IResponse<ProductTypeDocument>> {
+  ): Promise<IResponseStructure<ProductTypeDocument>> {
     const type = await this.findOne(_id);
     const { parent, typeName } = updateProductTypeDto;
     if (type) {
@@ -68,7 +68,7 @@ export class ProductTypeService {
     new HttpException("id错误", HttpStatus.BAD_REQUEST);
   }
 
-  async remove(_id: string): Promise<IResponse<string>> {
+  async remove(_id: string): Promise<IResponseStructure<string>> {
     await this.productTypeModel.deleteOne({ _id });
     return parseResponse({
       message: "删除成功",

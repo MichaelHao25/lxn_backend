@@ -1,15 +1,15 @@
 import { IsNotEmpty, IsString, IsUUID } from "class-validator";
 
-export interface IVvtoolResponse<T> {
-  /**
-   * 成功等于 0
-   */
-  code: number;
-  msg: string;
-  msec: number;
-  time: number;
-  data: T;
-}
+// export interface IVvtoolResponse<T> {
+//   /**
+//    * 成功等于 0
+//    */
+//   code: number;
+//   msg: string;
+//   msec: number;
+//   time: number;
+//   data: T;
+// }
 // {
 //   code: 0,
 //   msg: "查询成功",
@@ -22,13 +22,6 @@ export interface IVvtoolResponse<T> {
 //     scope: "show",
 //   },
 // }
-
-export interface IVvtoolAccessToken {
-  access_token: string;
-  expires_in: number;
-  token_type: string;
-  scope: string;
-}
 
 export class ParamsIdValidator {
   @IsString()

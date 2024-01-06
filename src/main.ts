@@ -13,7 +13,9 @@ import { AppModule } from "./app.module";
 import { globalPrefix } from "./constants";
 
 // FastifyRequest, FastifyReply
-const https = async () => {
+
+// const http = () => {};
+async function bootstrap(https: boolean = false) {
   /**
    * https 证书配置
    */
@@ -27,8 +29,12 @@ const https = async () => {
     AppModule,
     new FastifyAdapter({
       logger: true,
-      https: httpsOptions,
-      http2: true,
+      ...(https
+        ? {
+            https: httpsOptions,
+            http2: true,
+          }
+        : {}),
     })
   );
   /**
@@ -53,8 +59,8 @@ const https = async () => {
   /**
    * 异常过滤
    */
-  // const { httpAdapter } = app.get(HttpAdapterHost);
-  // app.useGlobalFilters(new AllExceptionsFilter(app.get(HttpAdapterHost)));
+//   const { httpAdapter } = app.get(HttpAdapterHost);
+//   app.useGlobalFilters(new AllExceptionsFilter(app.get(HttpAdapterHost)));
   /**
    * 设置默认前缀，排除/
    */
@@ -66,7 +72,6 @@ const https = async () => {
       },
     ],
   });
-  console.log(process.env);
 
   /**
    * 设置全局管道，校验请求参数
@@ -86,17 +91,20 @@ const https = async () => {
    * 配置api接口文档
    */
   const config = new DocumentBuilder()
-    .setTitle("document")
-    .setDescription("API description")
+    .addBasicAuth({
+      type: "http",
+      scheme: "bearer",
+    })
+    .setTitle("api接口文档")
+    .setDescription("")
     .setVersion("1.0")
-    .addTag("product")
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup("api", app, document);
-  await app.listen(443, "0.0.0.0");
-};
-// const http = () => {};
-async function bootstrap() {
-  https();
+  if (https) {
+    await app.listen(443, "0.0.0.0");
+  } else {
+    await app.listen(80, "0.0.0.0");
+  }
 }
 bootstrap();

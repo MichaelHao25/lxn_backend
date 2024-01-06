@@ -12,7 +12,7 @@ import { CreateSiteMessageDto } from "./dto/create-site-message.dto";
 import { UpdateSiteMessageDto } from "./dto/update-site-message.dto";
 import { SiteMessageService } from "./site-message.service";
 
-@Controller("siteMessage")
+@Controller("site-message")
 export class SiteMessageController {
   constructor(private readonly siteMessageService: SiteMessageService) {}
 
