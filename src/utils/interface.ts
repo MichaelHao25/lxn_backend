@@ -45,9 +45,24 @@ export enum IErrorShowType {
 }
 // 与后端约定的响应数据格式
 export interface IResponseStructure<T = any> {
+  /**
+   * 是否成功
+   */
   success: boolean;
+  /**
+   * 返回的数据
+   */
   data?: T;
+  /**
+   * 错误代码
+   */
   errorCode?: number;
+  /**
+   * 错误的消息
+   */
   errorMessage?: string;
+  /**
+   * 显示类型
+   */
   showType?: IErrorShowType;
 }

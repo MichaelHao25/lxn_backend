@@ -10,12 +10,12 @@ import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import * as fs from "fs";
 import * as path from "path";
 import { AppModule } from "./app.module";
-import { globalPrefix } from "./constants";
+import { globalPrefix, globalProtocol } from "./constants";
 
 // FastifyRequest, FastifyReply
 
 // const http = () => {};
-async function bootstrap(https: boolean = false) {
+async function bootstrap(https: boolean) {
   /**
    * https 证书配置
    */
@@ -110,4 +110,5 @@ async function bootstrap(https: boolean = false) {
     await app.listen(80, "0.0.0.0");
   }
 }
-bootstrap();
+// @ts-ignore
+bootstrap(globalProtocol === "https");

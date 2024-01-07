@@ -8,7 +8,13 @@ import { Model } from "mongoose";
 import * as crypto from "node:crypto";
 import * as fs from "node:fs";
 import * as path from "node:path";
-import { OssConfig, OssHeader, globalHost, globalPrefix } from "src/constants";
+import {
+  OssConfig,
+  OssHeader,
+  globalHost,
+  globalPrefix,
+  globalProtocol,
+} from "src/constants";
 import isFileExist from "src/modules/upload/utils/isFileExist";
 import { CreateUploadDto } from "./dto/create-upload.dto";
 import { Upload, UploadDocument } from "./entities/upload.entity";
@@ -85,7 +91,7 @@ export class UploadService {
                 const res = await this.findOneByFileLocation(location);
                 if (res) {
                   return resolve({
-                    url: `${globalHost}${globalPrefix}upload/${res._id}`,
+                    url: `${globalProtocol}://${globalHost}/${globalPrefix}upload/${res._id}`,
                   });
                 }
                 /**
@@ -129,7 +135,7 @@ export class UploadService {
                   });
                   if (res) {
                     return resolve({
-                      url: `${globalHost}${globalPrefix}upload/${res._id}`,
+                      url: `${globalProtocol}://${globalHost}/${globalPrefix}upload/${res._id}`,
                     });
                   }
                 }

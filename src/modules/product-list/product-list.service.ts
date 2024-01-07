@@ -23,7 +23,6 @@ export class ProductListService {
   async create(
     createProductListDto: CreateProductListDto
   ): Promise<ProductListDocument> {
-    const { typeId } = createProductListDto;
     const product = new this.productListModel(createProductListDto);
     await product.save();
     return product;
@@ -33,7 +32,7 @@ export class ProductListService {
     return await this.productListModel.find({}).limit(20);
   }
 
-  async findOne(_id: string): Promise<ProductListDocument[]> {
+  async findOne(_id: string): Promise<ProductListDocument> {
     return await this.productListModel.findById(_id);
   }
 

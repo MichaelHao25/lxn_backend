@@ -11,6 +11,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import * as fs from "node:fs";
 import { Public } from "src/common/decorators/public.decorator";
 import parseResponse from "src/common/parseSuccessResponse";
+import { ParamsIdValidator } from "src/utils/interface";
 import { IUpdateFile } from "./interface";
 import { UploadService } from "./upload.service";
 // const pump = util.promisify(stream.pipeline);
@@ -32,10 +33,11 @@ export class UploadController {
   @Get(":_id")
   @Public()
   async findOne(
-    @Param("_id") _id: string,
-    @Query("download") download: string,
-    @Res() res: FastifyReply
+    @Param() params: ParamsIdValidator,
+    @Res() res: FastifyReply,
+    @Query("download") download?: string
   ) {
+    const { _id } = params;
     const file = await this.uploadService.findOneById(_id);
     if (file) {
       res.header(

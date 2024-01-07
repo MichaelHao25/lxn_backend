@@ -3,8 +3,8 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import parseResponse from "src/common/parseSuccessResponse";
 import { IResponseStructure } from "src/utils/interface";
-import { CreateProductTypeDto } from "./dto/create-type.dto";
-import { UpdateProductTypeDto } from "./dto/update-type.dto";
+import { CreateProductTypeDto } from "./dto/create-product-type.dto";
+import { UpdateProductTypeDto } from "./dto/update-product-type.dto";
 import {
   ProductType,
   ProductTypeDocument,
@@ -15,6 +15,7 @@ export class ProductTypeService {
   constructor(
     @InjectModel(ProductType.name) private productTypeModel: Model<ProductType>
   ) {}
+
   async create(
     createProductTypeDto: CreateProductTypeDto
   ): Promise<ProductTypeDocument> {
@@ -35,8 +36,27 @@ export class ProductTypeService {
     }
   }
 
-  async findAll(): Promise<ProductTypeDocument[]> {
-    const list = await this.productTypeModel.find().limit(20).skip(0);
+  async findAll(params?: IFindAll): Promise<ProductTypeDocument[]> {
+    if (params?.type) {
+      return await this.productTypeModel.find(
+        {
+          parent: "659581b2f2a5d6175488bdf1",
+        },
+        {
+          _id: 1,
+          typeName: 1,
+        }
+      );
+    }
+    const list = await this.productTypeModel
+      .find(
+        {},
+        {
+          _id: 1,
+          typeName: 1,
+        }
+      )
+      .exec();
     return list;
   }
 

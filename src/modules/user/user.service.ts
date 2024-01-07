@@ -52,14 +52,14 @@ export class UserService {
    */
   async findOneByUsername(username: string): Promise<UserDocument> {
     const user = await this.userModel.findOne(
-      { username },
-      {
-        _id: 1,
-        username: 1,
-        isAdmin: 1,
-        isDisable: 1,
-        updateAt: 1,
-      }
+      { username }
+      //   {
+      //     _id: 1,
+      //     username: 1,
+      //     isAdmin: 1,
+      //     isDisable: 1,
+      //     updateAt: 1,
+      //   }
     );
     return user;
   }

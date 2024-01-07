@@ -9,7 +9,6 @@ import {
   Post,
   UnauthorizedException,
 } from "@nestjs/common";
-import { Put } from "@nestjs/common/decorators";
 import { HttpStatus } from "@nestjs/common/enums";
 import { JwtService } from "@nestjs/jwt";
 import { IsNotEmpty, IsString } from "class-validator";
@@ -42,7 +41,7 @@ export class UserController {
    * 用户注册
    */
   @Public()
-  @Put("/register")
+  @Post("/register")
   async create(@Body() createUserDto: CreateUserDto) {
     const user = await this.userService.findOneByUsername(
       createUserDto.username
@@ -70,7 +69,7 @@ export class UserController {
           const payload = { sub: res._id, username: res.username };
           const access_token = await this.jwtService.signAsync(payload);
           return parseResponse({
-            data: { access_token },
+            data: { access_token, username },
           });
         }
       }
