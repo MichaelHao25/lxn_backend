@@ -8,9 +8,10 @@ import {
   Post,
   Query,
 } from "@nestjs/common";
-import parseResponse from "src/common/parseSuccessResponse";
+import parseSuccessResponse from "src/common/parseSuccessResponse";
 import { IResponseStructure } from "src/utils/interface";
 import { CreateProductTypeDto } from "./dto/create-product-type.dto";
+import { FindProductTypeDto } from "./dto/find-product-type.dto";
 import { UpdateProductTypeDto } from "./dto/update-product-type.dto";
 import { ProductTypeService } from "./product-type.service";
 
@@ -25,7 +26,7 @@ export class ProductTypeController {
   @Post()
   async create(@Body() createProductTypeDto: CreateProductTypeDto) {
     const res = await this.productTypeService.create(createProductTypeDto);
-    return parseResponse({ data: res });
+    return parseSuccessResponse({ data: res });
   }
   /**
    * 查找类型
@@ -33,11 +34,16 @@ export class ProductTypeController {
    * @returns
    */
   @Get()
-  findAll(@Query("type") type: IFindAll["type"]) {
+  async findAll(
+    @Query() query: FindProductTypeDto
+  ): Promise<IResponseStructure> {
+    const { type } = query;
     if (["product", "news"].includes(type)) {
-      return this.productTypeService.findAll({ type });
+      const res = await this.productTypeService.findAll({ type });
+      return parseSuccessResponse({ data: res });
     }
-    return this.productTypeService.findAll();
+    const res = await this.productTypeService.findAll();
+    return parseSuccessResponse({ data: res });
   }
   /**
    * 根据 id 获取单个类型
@@ -45,8 +51,9 @@ export class ProductTypeController {
    * @returns
    */
   @Get(":_id")
-  findOne(@Param("_id") _id: string) {
-    return this.productTypeService.findOne(_id);
+  async findOne(@Param("_id") _id: string) {
+    const res = await this.productTypeService.findOne(_id);
+    return parseSuccessResponse({ data: res });
   }
   /**
    * 根据 id 更新类型
@@ -58,7 +65,8 @@ export class ProductTypeController {
     @Param("_id") _id: string,
     @Body() updateProduceTypeDto: UpdateProductTypeDto
   ) {
-    return await this.productTypeService.update(_id, updateProduceTypeDto);
+    const res = await this.productTypeService.update(_id, updateProduceTypeDto);
+    return parseSuccessResponse({ data: res });
   }
   /**
    * 根据 id 删除类型
@@ -67,6 +75,9 @@ export class ProductTypeController {
    */
   @Delete(":_id")
   async remove(@Param("_id") _id: string): Promise<IResponseStructure<string>> {
-    return await this.productTypeService.remove(_id);
+    await this.productTypeService.remove(_id);
+    return parseSuccessResponse({
+      data: "删除成功",
+    });
   }
 }

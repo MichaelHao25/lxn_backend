@@ -10,7 +10,7 @@ import { Query, Req, Res } from "@nestjs/common/decorators";
 import { FastifyReply, FastifyRequest } from "fastify";
 import * as fs from "node:fs";
 import { Public } from "src/common/decorators/public.decorator";
-import parseResponse from "src/common/parseSuccessResponse";
+import parseSuccessResponse from "src/common/parseSuccessResponse";
 import { ParamsIdValidator } from "src/utils/interface";
 import { IUpdateFile } from "./interface";
 import { UploadService } from "./upload.service";
@@ -65,7 +65,7 @@ export class UploadController {
     const files = await req.saveRequestFiles();
     const list = await this.uploadService.updateToLocalDisk(files);
     res.send(
-      parseResponse<IUpdateFile[]>({
+      parseSuccessResponse<IUpdateFile[]>({
         data: list,
       })
     );

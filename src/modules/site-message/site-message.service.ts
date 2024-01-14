@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import parseResponse from "src/common/parseSuccessResponse";
 import { CreateSiteMessageDto } from "./dto/create-site-message.dto";
 import { UpdateSiteMessageDto } from "./dto/update-site-message.dto";
 import {
@@ -30,8 +29,8 @@ export class SiteMessageService {
     return list;
   }
 
-  findOne(_id: string): Promise<SiteMessageDocument | null> {
-    return this.siteMessageModel.findById({ _id });
+  async findOne(_id: string): Promise<SiteMessageDocument | null> {
+    return await this.siteMessageModel.findById({ _id });
   }
 
   update(_id: string, updateSiteMessageDto: UpdateSiteMessageDto) {
@@ -39,7 +38,6 @@ export class SiteMessageService {
   }
 
   async remove(_id: string) {
-    this.siteMessageModel.deleteOne({ _id });
-    return parseResponse({ data: "删除成功!" });
+    await this.siteMessageModel.deleteOne({ _id });
   }
 }

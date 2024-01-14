@@ -8,11 +8,13 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from "@nestjs/common";
-import { ApiOperation } from "@nestjs/swagger";
+import parseSuccessResponse from "src/common/parseSuccessResponse";
 import { IResponseStructure } from "src/utils/interface";
 import { ProductTypeService } from "../product-type/product-type.service";
 import { CreateProductListDto } from "./dto/create-product-list.dto";
+import { FindProductListDto } from "./dto/find-product-list.dto";
 import { UpdateProductListDto } from "./dto/update-product-list.dto";
 import { ProductListService } from "./product-list.service";
 
@@ -22,38 +24,49 @@ export class ProductListController {
     private readonly productListService: ProductListService,
     private readonly productTypeService: ProductTypeService
   ) {}
+  /**
+   * 创建一个新的产品
+   */
   @Post()
-  @ApiOperation({ summary: "创建类型", description: "创建一个新的类型" })
   async create(@Body() createProductListDto: CreateProductListDto) {
     const { typeId } = createProductListDto;
     const type = await this.productTypeService.findOne(typeId);
     if (type) {
-      return await this.productListService.create(createProductListDto);
+      const res = await this.productListService.create(createProductListDto);
+      return parseSuccessResponse({ data: res });
     } else {
       throw new HttpException("类型不存在", HttpStatus.NOT_ACCEPTABLE);
     }
   }
 
   @Get()
-  @ApiOperation({ summary: "查询类型", description: "查询所有的类型" })
-  async findAll() {
-    return this.productListService.findAll();
+  /**
+   * 查询所有的产品
+   */
+  async findAll(@Query() query: FindProductListDto) {
+    const res = await this.productListService.findAll(query);
+    return parseSuccessResponse({ data: res });
   }
 
   @Get(":_id")
-  @ApiOperation({
-    summary: "获取类型",
-    description: "根据id查询这个类型的详细信息",
-  })
+  /**
+   * 获取单个产品
+   * @summary 测试
+   * @description 测试描述
+   */
   async findOne(@Param("_id") _id: string) {
-    return this.productListService.findOne(_id);
+    const res = await this.productListService.findOne(_id);
+    return parseSuccessResponse({ data: res });
   }
 
+  //   @ApiOperation({
+  //     summary: "更新类型",
+  //     description: "根据 _id 更新这个类型的其他属性",
+  //   })
+  /**
+   * 更新产品详情
+   */
   @Patch(":_id")
-  @ApiOperation({
-    summary: "更新类型",
-    description: "根据 _id 更新这个类型的其他属性",
-  })
   async update(
     @Param("_id") _id: string,
     @Body() updateProductListDto: UpdateProductListDto
@@ -64,27 +77,36 @@ export class ProductListController {
       if (typeId) {
         const type = await this.productTypeService.findOne(typeId);
         if (type) {
-          return await this.productListService.update(
+          const res = await this.productListService.update(
             _id,
             updateProductListDto
           );
+          return parseSuccessResponse({ data: res });
         } else {
           return new HttpException("类型不正确", HttpStatus.FORBIDDEN);
         }
       } else {
-        return await this.productListService.update(_id, updateProductListDto);
+        const res = await this.productListService.update(
+          _id,
+          updateProductListDto
+        );
+        return parseSuccessResponse({ data: res });
       }
     } else {
       return new HttpException("id不正确", HttpStatus.FORBIDDEN);
     }
   }
 
+  /**
+   * 删除产品
+   * @param _id
+   * @returns
+   */
   @Delete(":_id")
-  @ApiOperation({
-    summary: "删除类型",
-    description: "根据 _id 删除类型",
-  })
   async remove(@Param("_id") _id: string): Promise<IResponseStructure<string>> {
-    return await this.productListService.remove(_id);
+    await this.productListService.remove(_id);
+    return parseSuccessResponse({
+      data: "删除成功！",
+    });
   }
 }

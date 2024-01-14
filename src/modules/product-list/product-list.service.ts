@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import parseResponse from "src/common/parseSuccessResponse";
-import { IResponseStructure } from "src/utils/interface";
+import { ProductTypeService } from "../product-type/product-type.service";
 import { CreateProductListDto } from "./dto/create-product-list.dto";
+import { FindProductListDto } from "./dto/find-product-list.dto";
 import { UpdateProductListDto } from "./dto/update-product-list.dto";
 import {
   ProductList,
@@ -13,7 +13,8 @@ import {
 @Injectable()
 export class ProductListService {
   constructor(
-    @InjectModel(ProductList.name) private productListModel: Model<ProductList>
+    @InjectModel(ProductList.name) private productListModel: Model<ProductList>,
+    private readonly productTypeService: ProductTypeService
   ) {}
   /**
    * 创建一个新的产品
@@ -28,8 +29,48 @@ export class ProductListService {
     return product;
   }
 
-  async findAll(): Promise<ProductListDocument[]> {
-    return await this.productListModel.find({}).limit(20);
+  async findAll(query: FindProductListDto) {
+    const { current, pageSize, typeName, title } = query;
+    const queryExpress = {
+      ...(typeName ? { typeId: typeName } : {}),
+      ...(title
+        ? {
+            title: { $regex: title },
+          }
+        : {}),
+    };
+    const total = await this.productListModel.countDocuments(queryExpress);
+    const res = await this.productListModel
+      .find(queryExpress, {
+        title: 1,
+        _id: 1,
+        mainPicture: 1,
+        typeId: 1,
+        updatedAt: 1,
+      })
+      .limit(pageSize)
+      .skip((current - 1) * pageSize);
+    const list = await Promise.all(
+      res.map(async (item) => {
+        const { typeId, _id, title, mainPicture, updatedAt } = item;
+        const type = await this.productTypeService.findOne(typeId);
+        return {
+          _id,
+          title,
+          mainPicture,
+          updatedAt,
+          typeName: type.typeName,
+        };
+      })
+    );
+    return {
+      page: {
+        total,
+        current,
+        pageSize,
+      },
+      list,
+    };
   }
 
   async findOne(_id: string): Promise<ProductListDocument> {
@@ -65,10 +106,7 @@ export class ProductListService {
     return product;
   }
 
-  async remove(_id: string): Promise<IResponseStructure<string>> {
+  async remove(_id: string) {
     await this.productListModel.deleteOne({ _id });
-    return parseResponse({
-      data: "删除成功！",
-    });
   }
 }

@@ -31,10 +31,12 @@ export class AllExceptionsFilter implements ExceptionFilter {
       responseBody.errorMessage = exception.message;
       const response = exception.getResponse();
       if (response instanceof Object) {
-        const { showType = undefined } = response as {
+        const { showType = undefined, message } = response as {
           showType: IErrorShowType;
+          message: any;
         };
         responseBody.showType = showType;
+        responseBody.errorMessage = message;
       }
     } else {
       /**

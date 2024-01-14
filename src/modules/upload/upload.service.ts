@@ -91,6 +91,7 @@ export class UploadService {
                 const res = await this.findOneByFileLocation(location);
                 if (res) {
                   return resolve({
+                    name: `${fileName}.${ext}`,
                     url: `${globalProtocol}://${globalHost}/${globalPrefix}upload/${res._id}`,
                   });
                 }
@@ -135,6 +136,7 @@ export class UploadService {
                   });
                   if (res) {
                     return resolve({
+                      name: `${fileName}.${ext}`,
                       url: `${globalProtocol}://${globalHost}/${globalPrefix}upload/${res._id}`,
                     });
                   }

@@ -7,7 +7,7 @@ import {
   Patch,
   Post,
 } from "@nestjs/common";
-import parseResponse from "src/common/parseSuccessResponse";
+import parseSuccessResponse from "src/common/parseSuccessResponse";
 import { CreateSiteMessageDto } from "./dto/create-site-message.dto";
 import { UpdateSiteMessageDto } from "./dto/update-site-message.dto";
 import { SiteMessageService } from "./site-message.service";
@@ -17,31 +17,35 @@ export class SiteMessageController {
   constructor(private readonly siteMessageService: SiteMessageService) {}
 
   @Post()
-  create(@Body() createSiteMessageDto: CreateSiteMessageDto) {
-    return this.siteMessageService.create(createSiteMessageDto);
+  async create(@Body() createSiteMessageDto: CreateSiteMessageDto) {
+    const res = this.siteMessageService.create(createSiteMessageDto);
+    return parseSuccessResponse({ data: res });
   }
 
   @Get()
-  findAll() {
-    return this.siteMessageService.findAll();
+  async findAll() {
+    const res = this.siteMessageService.findAll();
+    return parseSuccessResponse({ data: res });
   }
 
   @Get(":_id")
-  findOne(@Param("_id") _id: string) {
-    return this.siteMessageService.findOne(_id);
+  async findOne(@Param("_id") _id: string) {
+    const res = await this.siteMessageService.findOne(_id);
+    return parseSuccessResponse({ data: res });
   }
 
   @Patch(":_id")
-  update(
+  async update(
     @Param("_id") _id: string,
     @Body() updateSiteMessageDto: UpdateSiteMessageDto
   ) {
-    return this.siteMessageService.update(_id, updateSiteMessageDto);
+    const res = await this.siteMessageService.update(_id, updateSiteMessageDto);
+    return parseSuccessResponse({ data: res });
   }
 
   @Delete(":_id")
   async remove(@Param("_id") _id: string) {
-    this.siteMessageService.remove(_id);
-    return parseResponse({ data: "删除成功!" });
+    await this.siteMessageService.remove(_id);
+    return parseSuccessResponse({ data: "删除成功!" });
   }
 }

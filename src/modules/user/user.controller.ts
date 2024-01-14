@@ -13,7 +13,7 @@ import { HttpStatus } from "@nestjs/common/enums";
 import { JwtService } from "@nestjs/jwt";
 import { IsNotEmpty, IsString } from "class-validator";
 import { Public } from "src/common/decorators/public.decorator";
-import parseResponse from "src/common/parseSuccessResponse";
+import parseSuccessResponse from "src/common/parseSuccessResponse";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { UserService } from "./user.service";
@@ -33,7 +33,7 @@ export class UserController {
   @Get("logout")
   async logout() {
     const user = await this.userService.logout();
-    return parseResponse({
+    return parseSuccessResponse({
       data: "退出成功！",
     });
   }
@@ -50,7 +50,7 @@ export class UserController {
       return new HttpException("用户已存在", HttpStatus.FORBIDDEN);
     }
     await this.userService.create(createUserDto);
-    return parseResponse({
+    return parseSuccessResponse({
       data: "注册成功！",
     });
   }
@@ -68,7 +68,7 @@ export class UserController {
         if (res.isDisable === false) {
           const payload = { sub: res._id, username: res.username };
           const access_token = await this.jwtService.signAsync(payload);
-          return parseResponse({
+          return parseSuccessResponse({
             data: { access_token, username },
           });
         }
@@ -84,7 +84,7 @@ export class UserController {
   @Get()
   async findAll() {
     const res = await this.userService.findAll();
-    return parseResponse({
+    return parseSuccessResponse({
       data: res,
     });
   }
@@ -98,7 +98,7 @@ export class UserController {
     const { username } = params;
     const res = await this.userService.findOneByUsername(username);
     if (res) {
-      return parseResponse({ data: res });
+      return parseSuccessResponse({ data: res });
     }
     throw new HttpException("用户信息不存在", HttpStatus.FORBIDDEN);
   }
@@ -115,7 +115,7 @@ export class UserController {
     @Body() updateUserDto: UpdateUserDto
   ) {
     this.userService.update(params.username, updateUserDto);
-    return parseResponse({
+    return parseSuccessResponse({
       data: "密码更改成功！",
     });
   }
@@ -129,7 +129,7 @@ export class UserController {
   async remove(@Param() params: ParamsUsernameValidator) {
     const { username } = params;
     this.userService.remove(username);
-    return parseResponse({
+    return parseSuccessResponse({
       data: "用户被删除",
     });
   }

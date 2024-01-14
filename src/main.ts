@@ -81,7 +81,7 @@ async function bootstrap(https: boolean) {
    */
   app.useGlobalPipes(
     new ValidationPipe({
-      disableErrorMessages: true,
+      disableErrorMessages: false,
       whitelist: true,
       /**
        * 将对象转换为DTO类
