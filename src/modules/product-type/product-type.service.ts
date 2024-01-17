@@ -2,7 +2,10 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { CreateProductTypeDto } from "./dto/create-product-type.dto";
-import { FindProductTypeDto } from "./dto/find-product-type.dto";
+import {
+  FindProductTypeDto,
+  IProductOneLevelType,
+} from "./dto/find-product-type.dto";
 import { UpdateProductTypeDto } from "./dto/update-product-type.dto";
 import {
   ProductType,
@@ -38,13 +41,20 @@ export class ProductTypeService {
   async findAll(
     params?: FindProductTypeDto
   ): Promise<{ _id: string; typeName: string }[]> {
-    if (params?.type) {
+    const { type } = params;
+    if (type) {
+      const TopLevel = {
+        [IProductOneLevelType.product]: "659581b2f2a5d6175488bdf1",
+
+        [IProductOneLevelType.news]: "65a3fd78523c7640007e31f8",
+      };
+      const parentId = IProductOneLevelType.product;
       return await this.productTypeModel.find<{
         _id: string;
         typeName: string;
       }>(
         {
-          parent: "659581b2f2a5d6175488bdf1",
+          parent: TopLevel[type],
         },
         {
           _id: 1,
@@ -52,6 +62,7 @@ export class ProductTypeService {
         }
       );
     }
+
     const list = await this.productTypeModel.find<{
       _id: string;
       typeName: string;

@@ -1,7 +1,7 @@
 import { IsOptional, IsString } from "class-validator";
 import { PageConfig } from "src/dto/index.dto";
 
-export class FindProductListDto extends PageConfig {
+export class FindNewsListDto extends PageConfig {
   /**
    * 类型id
    */

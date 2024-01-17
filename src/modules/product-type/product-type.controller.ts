@@ -11,7 +11,10 @@ import {
 import parseSuccessResponse from "src/common/parseSuccessResponse";
 import { IResponseStructure } from "src/utils/interface";
 import { CreateProductTypeDto } from "./dto/create-product-type.dto";
-import { FindProductTypeDto } from "./dto/find-product-type.dto";
+import {
+  FindProductTypeDto,
+  IProductOneLevelType,
+} from "./dto/find-product-type.dto";
 import { UpdateProductTypeDto } from "./dto/update-product-type.dto";
 import { ProductTypeService } from "./product-type.service";
 
@@ -38,7 +41,9 @@ export class ProductTypeController {
     @Query() query: FindProductTypeDto
   ): Promise<IResponseStructure> {
     const { type } = query;
-    if (["product", "news"].includes(type)) {
+    if (
+      [IProductOneLevelType.product, IProductOneLevelType.news].includes(type)
+    ) {
       const res = await this.productTypeService.findAll({ type });
       return parseSuccessResponse({ data: res });
     }

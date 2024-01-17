@@ -30,9 +30,9 @@ export class ProductListService {
   }
 
   async findAll(query: FindProductListDto) {
-    const { current, pageSize, typeName, title } = query;
+    const { current, pageSize, typeId, title } = query;
     const queryExpress = {
-      ...(typeName ? { typeId: typeName } : {}),
+      ...(typeId ? { typeId } : {}),
       ...(title
         ? {
             title: { $regex: title },

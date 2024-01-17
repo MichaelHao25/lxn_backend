@@ -14,5 +14,6 @@ import { ProductListService } from "./product-list.service";
   ],
   controllers: [ProductListController],
   providers: [ProductListService],
+  exports: [ProductListService],
 })
 export class ProductListModule {}

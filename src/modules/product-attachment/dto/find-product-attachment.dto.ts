@@ -1,5 +1,5 @@
 import { IsOptional, IsString } from "class-validator";
-import { PageConfig } from "src/dto";
+import { PageConfig } from "src/dto/index.dto";
 
 export class FindProductAttachmentDto extends PageConfig {
   /**
@@ -7,11 +7,11 @@ export class FindProductAttachmentDto extends PageConfig {
    */
   @IsOptional()
   @IsString()
-  name: string;
+  name?: string;
   /**
-   * 所属类型
+   * 所属类型 id
    */
   @IsOptional()
   @IsString()
-  typeName: string;
+  typeId?: string;
 }

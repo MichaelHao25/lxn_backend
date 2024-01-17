@@ -4,14 +4,12 @@ import {
   Delete,
   Get,
   Param,
-  Patch,
   Post,
   Query,
 } from "@nestjs/common";
 import parseSuccessResponse from "src/common/parseSuccessResponse";
-import { FindProductListDto } from "../product-list/dto/find-product-list.dto";
 import { CreateProductAttachmentDto } from "./dto/create-product-attachment.dto";
-import { UpdateProductAttachmentDto } from "./dto/update-product-attachment.dto";
+import { FindProductAttachmentDto } from "./dto/find-product-attachment.dto";
 import { ProductAttachmentService } from "./product-attachment.service";
 
 @Controller("product-attachment")
@@ -31,29 +29,32 @@ export class ProductAttachmentController {
   }
 
   @Get()
-  async findAll(@Query() query: FindProductListDto) {
+  async findAll(@Query() query: FindProductAttachmentDto) {
     const res = await this.productAttachmentService.findAll(query);
     return parseSuccessResponse({ data: res });
   }
 
-  @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.productAttachmentService.findOne(+id);
-  }
+  //   @Get(":id")
+  //   findOne(@Param("id") id: string) {
+  //     return this.productAttachmentService.findOne(+id);
+  //   }
 
-  @Patch(":id")
-  update(
-    @Param("id") id: string,
-    @Body() updateProductAttachmentDto: UpdateProductAttachmentDto
-  ) {
-    return this.productAttachmentService.update(
-      +id,
-      updateProductAttachmentDto
-    );
-  }
+  //   @Patch(":id")
+  //   update(
+  //     @Param("id") id: string,
+  //     @Body() updateProductAttachmentDto: UpdateProductAttachmentDto
+  //   ) {
+  //     return this.productAttachmentService.update(
+  //       +id,
+  //       updateProductAttachmentDto
+  //     );
+  //   }
 
-  @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.productAttachmentService.remove(+id);
+  @Delete(":_id")
+  async remove(@Param("_id") _id: string) {
+    await this.productAttachmentService.remove(_id);
+    return parseSuccessResponse({
+      data: "删除成功！",
+    });
   }
 }

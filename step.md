@@ -62,9 +62,13 @@ npm install -g cnpm --registry=https://registry.npmmirror.com
 cnpm install -g pnpm
 pnpm i --registry=https://registry.npmmirror.com
 
+npm install -g pnpm --registry=https://registry.npmmirror.com
+
 npm install http-server -g --registry=https://registry.npmmirror.com
 
 ## 80 http
+
+## 这里需要是ip
 
 http-server -p 80 -d false --proxy http://localhost:80?
 

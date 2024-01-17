@@ -105,9 +105,9 @@ async function bootstrap(https: boolean) {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup("api", app, document);
   if (https) {
-    await app.listen(443, "0.0.0.0");
+    await app.listen(3000, "0.0.0.0");
   } else {
-    await app.listen(80, "0.0.0.0");
+    await app.listen(3000, "0.0.0.0");
   }
 }
 // @ts-ignore

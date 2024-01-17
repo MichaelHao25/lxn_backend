@@ -8,6 +8,8 @@ import { AppService } from "./app.service";
 import { AllExceptionsFilter } from "./common/exceptionFilter/all-exception.filter";
 import { AuthGuard } from "./common/guard/auth.guard";
 import database from "./config/database";
+import { NewsListModule } from "./modules/news-list/news-list.module";
+import { ProductAttachmentModule } from "./modules/product-attachment/product-attachment.module";
 import { ProductListModule } from "./modules/product-list/product-list.module";
 import { ProductTypeModule } from "./modules/product-type/product-type.module";
 import { SiteMessageModule } from "./modules/site-message/site-message.module";
@@ -31,6 +33,8 @@ import { UserModule } from "./modules/user/user.module";
     UploadModule,
     ProductTypeModule,
     ProductListModule,
+    ProductAttachmentModule,
+    NewsListModule,
   ],
   controllers: [AppController],
   providers: [
