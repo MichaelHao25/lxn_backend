@@ -9,11 +9,11 @@ import * as crypto from "node:crypto";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import {
+  ApiPrefix,
+  CurrentProtocol,
   OssConfig,
   OssHeader,
-  globalHost,
-  globalPrefix,
-  globalProtocol,
+  ServiceHost,
 } from "src/constants";
 import isFileExist from "src/modules/upload/utils/isFileExist";
 import { CreateUploadDto } from "./dto/create-upload.dto";
@@ -92,7 +92,7 @@ export class UploadService {
                 if (res) {
                   return resolve({
                     name: `${fileName}.${ext}`,
-                    url: `${globalProtocol}://${globalHost}/${globalPrefix}upload/${res._id}`,
+                    url: `${CurrentProtocol}://${ServiceHost}/${ApiPrefix}upload/${res._id}`,
                   });
                 }
                 /**
@@ -137,7 +137,7 @@ export class UploadService {
                   if (res) {
                     return resolve({
                       name: `${fileName}.${ext}`,
-                      url: `${globalProtocol}://${globalHost}/${globalPrefix}upload/${res._id}`,
+                      url: `${CurrentProtocol}://${ServiceHost}/${ApiPrefix}upload/${res._id}`,
                     });
                   }
                 }

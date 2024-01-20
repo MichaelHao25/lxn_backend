@@ -3,6 +3,7 @@ import { APP_FILTER, APP_GUARD } from "@nestjs/core";
 import { MongooseModule } from "@nestjs/mongoose";
 import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
 
+import { ConfigModule } from "@nestjs/config";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { AllExceptionsFilter } from "./common/exceptionFilter/all-exception.filter";
@@ -18,6 +19,7 @@ import { UserModule } from "./modules/user/user.module";
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     MongooseModule.forRoot(database),
     ThrottlerModule.forRoot([
       {

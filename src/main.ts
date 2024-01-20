@@ -10,9 +10,7 @@ import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import * as fs from "fs";
 import * as path from "path";
 import { AppModule } from "./app.module";
-import { globalPrefix, globalProtocol } from "./constants";
-
-// FastifyRequest, FastifyReply
+import { ApiPrefix, CurrentProtocol, HttpPort, HttpsPort } from "./constants";
 
 // const http = () => {};
 async function bootstrap(https: boolean) {
@@ -67,7 +65,7 @@ async function bootstrap(https: boolean) {
   /**
    * 设置默认前缀，排除/
    */
-  app.setGlobalPrefix(globalPrefix, {
+  app.setGlobalPrefix(ApiPrefix, {
     exclude: [
       {
         path: "/",
@@ -105,10 +103,10 @@ async function bootstrap(https: boolean) {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup("api", app, document);
   if (https) {
-    await app.listen(3000, "0.0.0.0");
+    await app.listen(HttpsPort, "0.0.0.0");
   } else {
-    await app.listen(3000, "0.0.0.0");
+    await app.listen(HttpPort, "0.0.0.0");
   }
 }
 // @ts-ignore
-bootstrap(globalProtocol === "https");
+bootstrap(CurrentProtocol === "https");
