@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
 } from "@nestjs/common";
+import { Public } from "src/common/decorators/public.decorator";
 import parseSuccessResponse from "src/common/parseSuccessResponse";
 import { CreateSiteMessageDto } from "./dto/create-site-message.dto";
 import { UpdateSiteMessageDto } from "./dto/update-site-message.dto";
@@ -20,6 +21,7 @@ export class SiteMessageController {
    * 创建一条站内信
    */
   @Post()
+  @Public()
   async create(@Body() createSiteMessageDto: CreateSiteMessageDto) {
     const res = await this.siteMessageService.create(createSiteMessageDto);
     return parseSuccessResponse({ data: res });

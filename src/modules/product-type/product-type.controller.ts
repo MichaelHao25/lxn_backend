@@ -8,6 +8,7 @@ import {
   Post,
   Query,
 } from "@nestjs/common";
+import { Public } from "src/common/decorators/public.decorator";
 import parseSuccessResponse from "src/common/parseSuccessResponse";
 import { IResponseStructure } from "src/utils/interface";
 import { CreateProductTypeDto } from "./dto/create-product-type.dto";
@@ -37,6 +38,7 @@ export class ProductTypeController {
    * @returns
    */
   @Get()
+  @Public()
   async findAll(
     @Query() query: FindProductTypeDto
   ): Promise<IResponseStructure> {

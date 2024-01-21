@@ -10,6 +10,7 @@ import {
   Post,
   Query,
 } from "@nestjs/common";
+import { Public } from "src/common/decorators/public.decorator";
 import parseSuccessResponse from "src/common/parseSuccessResponse";
 import { IResponseStructure } from "src/utils/interface";
 import { ProductTypeService } from "../product-type/product-type.service";
@@ -43,6 +44,7 @@ export class NewsListController {
    * 查询所有的产品
    */
   @Get()
+  @Public()
   async findAll(@Query() query: FindNewsListDto) {
     const res = await this.newsListService.findAll(query);
     return parseSuccessResponse({ data: res });
@@ -52,6 +54,7 @@ export class NewsListController {
    * 获取单个产品
    */
   @Get(":_id")
+  @Public()
   async findOne(@Param("_id") _id: string) {
     const res = await this.newsListService.findOne(_id);
     return parseSuccessResponse({ data: res });

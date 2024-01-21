@@ -10,6 +10,7 @@ import {
   Post,
   Query,
 } from "@nestjs/common";
+import { Public } from "src/common/decorators/public.decorator";
 import parseSuccessResponse from "src/common/parseSuccessResponse";
 import { IResponseStructure } from "src/utils/interface";
 import { ProductTypeService } from "../product-type/product-type.service";
@@ -39,21 +40,23 @@ export class ProductListController {
     }
   }
 
-  @Get()
   /**
    * 查询所有的产品
    */
+  @Get()
+  @Public()
   async findAll(@Query() query: FindProductListDto) {
     const res = await this.productListService.findAll(query);
     return parseSuccessResponse({ data: res });
   }
 
-  @Get(":_id")
   /**
    * 获取单个产品
    * @summary 测试
    * @description 测试描述
    */
+  @Get(":_id")
+  @Public()
   async findOne(@Param("_id") _id: string) {
     const res = await this.productListService.findOne(_id);
     return parseSuccessResponse({ data: res });

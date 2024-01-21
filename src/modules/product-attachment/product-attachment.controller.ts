@@ -7,6 +7,7 @@ import {
   Post,
   Query,
 } from "@nestjs/common";
+import { Public } from "src/common/decorators/public.decorator";
 import parseSuccessResponse from "src/common/parseSuccessResponse";
 import { CreateProductAttachmentDto } from "./dto/create-product-attachment.dto";
 import { FindProductAttachmentDto } from "./dto/find-product-attachment.dto";
@@ -33,6 +34,7 @@ export class ProductAttachmentController {
    * 查找所有附件
    */
   @Get()
+  @Public()
   async findAll(@Query() query: FindProductAttachmentDto) {
     const res = await this.productAttachmentService.findAll(query);
     return parseSuccessResponse({ data: res });
