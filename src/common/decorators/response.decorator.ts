@@ -1,12 +1,12 @@
 // import { Type, applyDecorators } from "@nestjs/common";
 // import { ApiExtraModels, ApiOkResponse, getSchemaPath } from "@nestjs/swagger";
-// import { IResponseStructure } from "src/utils/interface";
+// import { BaseResponse } from "src/dto/index.dto";
 
-// export const ApiSwaggerResponse = <TModel extends Type<any>>() =>
+// export const ApiSwaggerResponse = <TModel extends Type<any>>(model: TModel) =>
 //   /**
 //    * data 内容
 //    */
-//   //   model: TModel,
+//   // model: TModel,
 //   /**
 //    * data是数组还是对象或者是字符串
 //    */
@@ -28,21 +28,19 @@
 //     //     return { type: typeof type };
 //     //   };
 //     return applyDecorators(
-//       ApiExtraModels(
-//         IResponseStructure
-//         //   , model
-//       ),
+//       ApiExtraModels(BaseResponse, model),
 //       ApiOkResponse({
 //         schema: {
 //           allOf: [
-//             { $ref: getSchemaPath(IResponseStructure) },
-//             // {
-//             //   properties: {
-//             //     data: {
-//             //       type: "any",
-//             //     },
-//             //   },
-//             // },
+//             { $ref: getSchemaPath(BaseResponse) },
+//             {
+//               properties: {
+//                 results: {
+//                   type: "array",
+//                   items: { $ref: getSchemaPath(model) },
+//                 },
+//               },
+//             },
 //           ],
 //         },
 //       })

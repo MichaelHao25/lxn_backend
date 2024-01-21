@@ -17,7 +17,9 @@ export class ProductAttachmentController {
   constructor(
     private readonly productAttachmentService: ProductAttachmentService
   ) {}
-
+  /**
+   * 创建一个新的附件
+   */
   @Post()
   async create(@Body() createProductAttachmentDto: CreateProductAttachmentDto) {
     const res = await this.productAttachmentService.create(
@@ -27,7 +29,9 @@ export class ProductAttachmentController {
       data: res,
     });
   }
-
+  /**
+   * 查找所有附件
+   */
   @Get()
   async findAll(@Query() query: FindProductAttachmentDto) {
     const res = await this.productAttachmentService.findAll(query);
@@ -49,7 +53,9 @@ export class ProductAttachmentController {
   //       updateProductAttachmentDto
   //     );
   //   }
-
+  /**
+   * 删除一个附件
+   */
   @Delete(":_id")
   async remove(@Param("_id") _id: string) {
     await this.productAttachmentService.remove(_id);

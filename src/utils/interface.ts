@@ -37,10 +37,25 @@ export class ParamsUUIDValidator {
 
 // 错误处理方案： 错误类型
 export enum IErrorShowType {
+  /**
+   * 静默
+   */
   SILENT = 0,
+  /**
+   * 警告消息
+   */
   WARN_MESSAGE = 1,
+  /**
+   * 错误消息
+   */
   ERROR_MESSAGE = 2,
+  /**
+   * 通知消息
+   */
   NOTIFICATION = 3,
+  /**
+   * 重定向
+   */
   REDIRECT = 9,
 }
 // 与后端约定的响应数据格式

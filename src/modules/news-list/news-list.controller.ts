@@ -39,21 +39,19 @@ export class NewsListController {
     }
   }
 
-  @Get()
   /**
    * 查询所有的产品
    */
+  @Get()
   async findAll(@Query() query: FindNewsListDto) {
     const res = await this.newsListService.findAll(query);
     return parseSuccessResponse({ data: res });
   }
 
-  @Get(":_id")
   /**
    * 获取单个产品
-   * @summary 测试
-   * @description 测试描述
    */
+  @Get(":_id")
   async findOne(@Param("_id") _id: string) {
     const res = await this.newsListService.findOne(_id);
     return parseSuccessResponse({ data: res });

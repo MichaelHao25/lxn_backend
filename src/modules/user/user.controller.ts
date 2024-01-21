@@ -30,6 +30,9 @@ export class UserController {
     private jwtService: JwtService
   ) {}
 
+  /**
+   * 用户退出
+   */
   @Get("logout")
   async logout() {
     const user = await this.userService.logout();

@@ -18,6 +18,7 @@ export class ProductAttachmentService {
     private readonly productListService: ProductListService,
     private readonly productTypeService: ProductTypeService
   ) {}
+
   async create(createProductAttachmentDto: CreateProductAttachmentDto) {
     const { name, productList_id, url } = createProductAttachmentDto;
     const productItem = await this.productListService.findOne(productList_id);
@@ -33,7 +34,6 @@ export class ProductAttachmentService {
     await attachment.save();
     return attachment;
   }
-
   async findAll(props: FindProductAttachmentDto) {
     const { pageSize, current, typeId, name } = props;
     const queryExpress: FilterQuery<ProductAttachmentDocument> = {
