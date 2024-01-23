@@ -93,7 +93,7 @@ export class UploadService {
                 if (res) {
                   return resolve({
                     name: `${fileName}.${ext}`,
-                    url: `${CurrentProtocol}${getPort()}://${ServiceHost}/${ApiPrefix}upload/${
+                    url: `${CurrentProtocol}://${ServiceHost}:${getPort()}/${ApiPrefix}upload/${
                       res._id
                     }`,
                   });
@@ -140,7 +140,7 @@ export class UploadService {
                   if (res) {
                     return resolve({
                       name: `${fileName}.${ext}`,
-                      url: `${CurrentProtocol}${getPort()}://${ServiceHost}/${ApiPrefix}upload/${
+                      url: `${CurrentProtocol}://${ServiceHost}:${getPort()}/${ApiPrefix}upload/${
                         res._id
                       }`,
                     });
