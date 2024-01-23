@@ -14,6 +14,7 @@ import {
   OssConfig,
   OssHeader,
   ServiceHost,
+  getPort,
 } from "src/constants";
 import isFileExist from "src/modules/upload/utils/isFileExist";
 import { CreateUploadDto } from "./dto/create-upload.dto";
@@ -92,7 +93,9 @@ export class UploadService {
                 if (res) {
                   return resolve({
                     name: `${fileName}.${ext}`,
-                    url: `${CurrentProtocol}://${ServiceHost}/${ApiPrefix}upload/${res._id}`,
+                    url: `${CurrentProtocol}${getPort()}://${ServiceHost}/${ApiPrefix}upload/${
+                      res._id
+                    }`,
                   });
                 }
                 /**
@@ -137,7 +140,9 @@ export class UploadService {
                   if (res) {
                     return resolve({
                       name: `${fileName}.${ext}`,
-                      url: `${CurrentProtocol}://${ServiceHost}/${ApiPrefix}upload/${res._id}`,
+                      url: `${CurrentProtocol}${getPort()}://${ServiceHost}/${ApiPrefix}upload/${
+                        res._id
+                      }`,
                     });
                   }
                 }
