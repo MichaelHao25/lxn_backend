@@ -49,7 +49,8 @@ export class NewsListService {
       .skip((current - 1) * pageSize);
     const list = await Promise.all(
       res.map(async (item) => {
-        const { typeId, _id, title, mainPicture, updatedAt } = item;
+        const { typeId, _id, title, mainPicture, updatedAt, description } =
+          item;
         const type = await this.productTypeService.findOne(typeId);
         return {
           _id,
@@ -57,6 +58,7 @@ export class NewsListService {
           mainPicture,
           updatedAt,
           typeName: type.typeName,
+          description,
         };
       })
     );
