@@ -44,6 +44,7 @@ export class NewsListService {
         mainPicture: 1,
         typeId: 1,
         updatedAt: 1,
+        description: 1,
       })
       .limit(pageSize)
       .skip((current - 1) * pageSize);
