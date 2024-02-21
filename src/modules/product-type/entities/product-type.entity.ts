@@ -22,6 +22,11 @@ export class ProductType {
   @Prop({ required: false, default: "" })
   parent: string;
   /**
+   * 顺序
+   */
+  @Prop()
+  order?: number;
+  /**
    * 更新时间
    */
   @Prop({ default: Date.now })

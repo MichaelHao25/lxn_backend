@@ -45,22 +45,23 @@ export class ProductTypeService {
     if (type) {
       const TopLevel = {
         [IProductOneLevelType.product]: "659581b2f2a5d6175488bdf1",
-
         [IProductOneLevelType.news]: "65a3fd78523c7640007e31f8",
       };
       const parentId = IProductOneLevelType.product;
-      return await this.productTypeModel.find<{
-        _id: string;
-        typeName: string;
-      }>(
-        {
-          parent: TopLevel[type],
-        },
-        {
-          _id: 1,
-          typeName: 1,
-        }
-      );
+      return await this.productTypeModel
+        .find<{
+          _id: string;
+          typeName: string;
+        }>(
+          {
+            parent: TopLevel[type],
+          },
+          {
+            _id: 1,
+            typeName: 1,
+          }
+        )
+        .sort({ order: 1 });
     }
 
     const list = await this.productTypeModel.find<{
