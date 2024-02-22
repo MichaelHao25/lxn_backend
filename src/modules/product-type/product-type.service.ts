@@ -61,7 +61,7 @@ export class ProductTypeService {
             typeName: 1,
           }
         )
-        .sort({ order: 1 });
+        .sort({ order: -1 });
     }
 
     const list = await this.productTypeModel.find<{

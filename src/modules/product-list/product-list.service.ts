@@ -47,12 +47,14 @@ export class ProductListService {
         mainPicture: 1,
         typeId: 1,
         updatedAt: 1,
+        order: 1,
       })
       .limit(pageSize)
-      .skip((current - 1) * pageSize);
+      .skip((current - 1) * pageSize)
+      .sort({ order: -1 });
     const list = await Promise.all(
       res.map(async (item) => {
-        const { typeId, _id, title, mainPicture, updatedAt } = item;
+        const { typeId, _id, title, mainPicture, updatedAt, order } = item;
         const type = await this.productTypeService.findOne(typeId);
         return {
           _id,
@@ -60,6 +62,7 @@ export class ProductListService {
           mainPicture,
           updatedAt,
           typeName: type.typeName,
+          order,
         };
       })
     );
@@ -82,7 +85,7 @@ export class ProductListService {
     updateProductListDto: UpdateProductListDto
   ): Promise<ProductListDocument> {
     const product = await this.productListModel.findById(_id);
-    const { typeId, title, mainPicture, banner, description, details } =
+    const { typeId, title, mainPicture, banner, description, details, order } =
       updateProductListDto;
     if (typeId) {
       product.typeId = typeId;
@@ -101,6 +104,9 @@ export class ProductListService {
     }
     if (details) {
       product.details = details;
+    }
+    if (order) {
+      product.order = order;
     }
     await product.save();
     return product;

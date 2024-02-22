@@ -1,4 +1,4 @@
-import { IsString } from "class-validator";
+import { IsNumber, IsOptional, IsString } from "class-validator";
 
 export class CreateProductAttachmentDto {
   /**
@@ -16,4 +16,10 @@ export class CreateProductAttachmentDto {
    */
   @IsString()
   url: string;
+  /**
+   * 顺序(越大越靠前)
+   */
+  @IsNumber()
+  @IsOptional()
+  order?: number;
 }

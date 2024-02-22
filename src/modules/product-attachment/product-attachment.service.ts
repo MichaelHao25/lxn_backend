@@ -20,7 +20,7 @@ export class ProductAttachmentService {
   ) {}
 
   async create(createProductAttachmentDto: CreateProductAttachmentDto) {
-    const { name, productList_id, url } = createProductAttachmentDto;
+    const { name, productList_id, url, order } = createProductAttachmentDto;
     const productItem = await this.productListService.findOne(productList_id);
     if (!productItem) {
       throw new InternalServerErrorException("选择的商品不存在，请联系管理员");
@@ -30,6 +30,7 @@ export class ProductAttachmentService {
       productList_id,
       url,
       productType_id: productItem.typeId,
+      ...(order ? { order } : {}),
     });
     await attachment.save();
     return attachment;
@@ -46,7 +47,8 @@ export class ProductAttachmentService {
     const res = await this.productAttachmentModel
       .find(queryExpress)
       .limit(pageSize)
-      .skip((current - 1) * pageSize);
+      .skip((current - 1) * pageSize)
+      .sort({ order: -1 });
     const list = await Promise.all(
       res.map(async (item) => {
         const { updatedAt, productList_id, productType_id, url, _id, name } =

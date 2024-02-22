@@ -1,4 +1,11 @@
-import { ArrayNotEmpty, IsArray, IsString, IsUrl } from "class-validator";
+import {
+  ArrayNotEmpty,
+  IsArray,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUrl,
+} from "class-validator";
 
 export class CreateProductListDto {
   /**
@@ -33,4 +40,10 @@ export class CreateProductListDto {
    */
   @IsString()
   details: string;
+  /**
+   * 顺序(越大越靠前)
+   */
+  @IsNumber()
+  @IsOptional()
+  order?: number;
 }

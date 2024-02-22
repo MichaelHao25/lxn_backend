@@ -22,7 +22,7 @@ export class ProductType {
   @Prop({ required: false, default: "" })
   parent: string;
   /**
-   * 顺序
+   * 顺序(越大越靠前)
    */
   @Prop()
   order?: number;

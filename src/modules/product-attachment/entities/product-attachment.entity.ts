@@ -32,6 +32,11 @@ export class ProductAttachment {
   @Prop({ required: true })
   url: string;
   /**
+   * 顺序(越大越靠前)
+   */
+  @Prop()
+  order?: number;
+  /**
    * 更新时间
    */
   @Prop({ default: Date.now })
