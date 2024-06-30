@@ -7,13 +7,12 @@ import { ConfigModule } from "@nestjs/config";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { AllExceptionsFilter } from "./common/exceptionFilter/all-exception.filter";
-import { AuthGuard } from "./common/guard/auth.guard";
 import database from "./config/database";
-import { NewsListModule } from "./modules/news-list/news-list.module";
+import { ContactUsModule } from "./modules/contact-us/contact-us.module";
+import { NewsModule } from "./modules/news/news.module";
 import { ProductAttachmentModule } from "./modules/product-attachment/product-attachment.module";
-import { ProductListModule } from "./modules/product-list/product-list.module";
-import { ProductTypeModule } from "./modules/product-type/product-type.module";
-import { SiteMessageModule } from "./modules/site-message/site-message.module";
+import { ProductModule } from "./modules/product/product.module";
+import { TypeModule } from "./modules/type/type.module";
 import { UploadModule } from "./modules/upload/upload.module";
 import { UserModule } from "./modules/user/user.module";
 
@@ -30,21 +29,21 @@ import { UserModule } from "./modules/user/user.module";
         limit: 60,
       },
     ]),
-    SiteMessageModule,
+    ContactUsModule,
     UserModule,
     UploadModule,
-    ProductTypeModule,
-    ProductListModule,
+    TypeModule,
+    ProductModule,
     ProductAttachmentModule,
-    NewsListModule,
+    NewsModule,
   ],
   controllers: [AppController],
   providers: [
     AppService,
-    {
-      provide: APP_GUARD,
-      useClass: AuthGuard,
-    },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: AuthGuard,
+    // },
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,

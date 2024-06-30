@@ -10,7 +10,7 @@ import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import * as fs from "fs";
 import * as path from "path";
 import { AppModule } from "./app.module";
-import { ApiPrefix, CurrentProtocol, HttpPort, HttpsPort } from "./constants";
+import { ApiPrefix, HttpPort, HttpsPort } from "./constants";
 
 // const http = () => {};
 async function bootstrap(https: boolean) {
@@ -108,5 +108,4 @@ async function bootstrap(https: boolean) {
     await app.listen(HttpPort, "0.0.0.0");
   }
 }
-// @ts-ignore
-bootstrap(CurrentProtocol === "https");
+bootstrap(false);

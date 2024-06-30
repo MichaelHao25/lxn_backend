@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
-import { ProductListModule } from "../product-list/product-list.module";
-import { ProductTypeModule } from "../product-type/product-type.module";
+import { ProductModule } from "../product/product.module";
+import { TypeModule } from "../type/type.module";
 import {
   ProductAttachment,
   ProductAttachmentSchema,
@@ -14,8 +14,8 @@ import { ProductAttachmentService } from "./product-attachment.service";
     MongooseModule.forFeature([
       { name: ProductAttachment.name, schema: ProductAttachmentSchema },
     ]),
-    ProductListModule,
-    ProductTypeModule,
+    ProductModule,
+    TypeModule,
   ],
   controllers: [ProductAttachmentController],
   providers: [ProductAttachmentService],

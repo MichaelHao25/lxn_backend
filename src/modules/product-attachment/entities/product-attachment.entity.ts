@@ -25,7 +25,7 @@ export class ProductAttachment {
    * 附件所属产品id
    */
   @Prop({ required: true })
-  productList_id: string;
+  product_id: string;
   /**
    * 附件下载地址
    */

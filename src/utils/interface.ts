@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsString, IsUUID } from "class-validator";
+import { ObjectId } from "mongoose";
 
 // export interface IVvtoolResponse<T> {
 //   /**
@@ -26,7 +27,7 @@ import { IsNotEmpty, IsString, IsUUID } from "class-validator";
 export class ParamsIdValidator {
   @IsString()
   @IsNotEmpty()
-  _id: string;
+  _id: ObjectId;
 }
 
 export class ParamsUUIDValidator {

@@ -10,7 +10,7 @@ export class CreateProductAttachmentDto {
    * 附件所属产品id
    */
   @IsString()
-  productList_id: string;
+  product_id: string;
   /**
    * 附件下载地址
    */

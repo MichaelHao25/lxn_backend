@@ -14,12 +14,12 @@ export class User {
   /**
    * 用户名
    */
-  @Prop({ required: true, unique: true })
+  @Prop({ required: true, unique: true, trim: true, lowercase: true })
   username: string;
   /**
    * 密码
    */
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true, trim: true, lowercase: true })
   password: string;
   /**
    * 当前用户是否被禁用

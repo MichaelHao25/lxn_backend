@@ -1,8 +1,8 @@
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { FilterQuery, Model } from "mongoose";
-import { ProductListService } from "../product-list/product-list.service";
-import { ProductTypeService } from "../product-type/product-type.service";
+import { FilterQuery, Model, ObjectId } from "mongoose";
+import { ProductService } from "../product/product.service";
+import { TypeService } from "../type/type.service";
 import { CreateProductAttachmentDto } from "./dto/create-product-attachment.dto";
 import { FindProductAttachmentDto } from "./dto/find-product-attachment.dto";
 import {
@@ -15,21 +15,21 @@ export class ProductAttachmentService {
   constructor(
     @InjectModel(ProductAttachment.name)
     private productAttachmentModel: Model<ProductAttachment>,
-    private readonly productListService: ProductListService,
-    private readonly productTypeService: ProductTypeService
+    private readonly productService: ProductService,
+    private readonly typeService: TypeService
   ) {}
 
   async create(createProductAttachmentDto: CreateProductAttachmentDto) {
-    const { name, productList_id, url, order } = createProductAttachmentDto;
-    const productItem = await this.productListService.findOne(productList_id);
+    const { name, product_id, url, order } = createProductAttachmentDto;
+    const productItem = await this.productService.findOne(product_id);
     if (!productItem) {
       throw new InternalServerErrorException("选择的商品不存在，请联系管理员");
     }
     const attachment = new this.productAttachmentModel({
       name,
-      productList_id,
+      product_id,
       url,
-      productType_id: productItem.typeId,
+      productType_id: productItem.type,
       ...(order ? { order } : {}),
     });
     await attachment.save();
@@ -51,16 +51,13 @@ export class ProductAttachmentService {
       .sort({ order: -1 });
     const list = await Promise.all(
       res.map(async (item) => {
-        const { updatedAt, productList_id, productType_id, url, _id, name } =
-          item;
-        const productItem = await this.productListService.findOne(
-          productList_id
-        );
+        const { updatedAt, product_id, productType_id, url, _id, name } = item;
+        const productItem = await this.productService.findOne(product_id);
 
-        const typeItem = await this.productTypeService.findOne(productType_id);
+        const typeItem = await this.typeService.findOne(productType_id);
         return {
-          typeName: typeItem ? typeItem.typeName : "",
-          productTitle: productItem ? productItem.title : "",
+          type: typeItem ? typeItem.title : "",
+          title: productItem ? productItem.title : "",
           updatedAt,
           url,
           _id,
@@ -70,7 +67,7 @@ export class ProductAttachmentService {
     );
     // typeName
     //   producyName
-    //   productTypeService
+    //   typeService
     return {
       page: {
         total,
@@ -89,7 +86,7 @@ export class ProductAttachmentService {
   //     return `This action updates a #${id} productAttachment`;
   //   }
 
-  async remove(_id: string) {
+  async remove(_id: ObjectId) {
     await this.productAttachmentModel.deleteOne({ _id });
   }
 }
