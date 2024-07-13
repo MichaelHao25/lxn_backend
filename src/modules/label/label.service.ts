@@ -1,11 +1,15 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model, ObjectId } from "mongoose";
+import { Model } from "mongoose";
 import { CreateLabelDto } from "./dto/create-label.dto";
 import { FindLabelDto } from "./dto/find-label.dto";
 import { UpdateLabelDto } from "./dto/update-label.dto";
 import { Label, LabelDocument } from "./entities/label.entity";
 
+const selectFields = {
+  _id: 1,
+  title: 1,
+};
 @Injectable()
 export class LabelService {
   constructor(@InjectModel(Label.name) private labelModel: Model<Label>) {}
@@ -17,27 +21,25 @@ export class LabelService {
   }
 
   async findAll(
-    params?: FindLabelDto
-  ): Promise<{ _id: ObjectId; title: string }[]> {
-    const list = await this.labelModel.find<{
-      _id: ObjectId;
-      title: string;
-    }>(
-      {},
-      {
-        _id: 1,
-        title: 1,
-      }
-    );
+    params: FindLabelDto
+  ): Promise<{ _id: string; title: string }[]> {
+    const { current, pageSize } = params;
+    const list = await this.labelModel
+      .find<{
+        _id: string;
+        title: string;
+      }>({}, selectFields)
+      .limit(pageSize)
+      .skip((current - 1) * pageSize);
     return list;
   }
 
-  async findOne(_id: ObjectId): Promise<LabelDocument> {
+  async findOne(_id: string): Promise<LabelDocument> {
     return await this.labelModel.findById(_id);
   }
 
   async update(
-    _id: ObjectId,
+    _id: string,
     updateLabelDto: UpdateLabelDto
   ): Promise<LabelDocument> {
     const label = await this.findOne(_id);
@@ -50,7 +52,7 @@ export class LabelService {
     new HttpException("id错误", HttpStatus.BAD_REQUEST);
   }
 
-  async remove(_id: ObjectId) {
+  async remove(_id: string) {
     await this.labelModel.deleteOne({ _id });
   }
 }

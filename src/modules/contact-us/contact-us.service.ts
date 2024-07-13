@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model, ObjectId } from "mongoose";
+import { Model } from "mongoose";
 import { CreateContactUsDto } from "./dto/create-contact-us.dto";
 import { FindContactUsDto } from "./dto/find-contact-us.dto";
 import { UpdateContactUsDto } from "./dto/update-contact-us.dto";
@@ -45,11 +45,11 @@ export class ContactUsService {
     return list;
   }
 
-  async findOne(_id: ObjectId): Promise<ContactUsDocument | null> {
+  async findOne(_id: string): Promise<ContactUsDocument | null> {
     return await this.contactUsModel.findById({ _id }, selectFields);
   }
 
-  async update(_id: ObjectId, updateContactUsDto: UpdateContactUsDto) {
+  async update(_id: string, updateContactUsDto: UpdateContactUsDto) {
     const item = await this.findOne(_id);
     Object.keys(updateContactUsDto).map((key) => {
       item[key] = updateContactUsDto[key];
@@ -58,7 +58,7 @@ export class ContactUsService {
     return item;
   }
 
-  async remove(_id: ObjectId) {
+  async remove(_id: string) {
     await this.contactUsModel.deleteOne({ _id });
   }
 }

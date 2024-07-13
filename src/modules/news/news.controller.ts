@@ -10,7 +10,6 @@ import {
   Post,
   Query,
 } from "@nestjs/common";
-import { ObjectId } from "mongoose";
 import { Public } from "src/common/decorators/public.decorator";
 import parseSuccessResponse from "src/common/parseSuccessResponse";
 import { IResponseStructure } from "src/utils/interface";
@@ -56,7 +55,7 @@ export class NewsController {
    */
   @Get(":_id")
   @Public()
-  async findOne(@Param("_id") _id: ObjectId) {
+  async findOne(@Param("_id") _id: string) {
     const res = await this.newsService.findOne(_id);
     return parseSuccessResponse({ data: res });
   }
@@ -70,7 +69,7 @@ export class NewsController {
    */
   @Patch(":_id")
   async update(
-    @Param("_id") _id: ObjectId,
+    @Param("_id") _id: string,
     @Body() updateNewsDto: UpdateNewsDto
   ) {
     const { typeId } = updateNewsDto;
@@ -99,9 +98,7 @@ export class NewsController {
    * @returns
    */
   @Delete(":_id")
-  async remove(
-    @Param("_id") _id: ObjectId
-  ): Promise<IResponseStructure<string>> {
+  async remove(@Param("_id") _id: string): Promise<IResponseStructure<string>> {
     await this.newsService.remove(_id);
     return parseSuccessResponse({
       data: "删除成功！",

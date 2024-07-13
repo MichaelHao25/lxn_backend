@@ -8,7 +8,6 @@ import {
   Post,
   Query,
 } from "@nestjs/common";
-import { ObjectId } from "mongoose";
 import { Public } from "src/common/decorators/public.decorator";
 import parseSuccessResponse from "src/common/parseSuccessResponse";
 import { IResponseStructure } from "src/utils/interface";
@@ -47,7 +46,7 @@ export class LabelController {
    * @returns
    */
   @Get(":_id")
-  async findOne(@Param("_id") _id: ObjectId) {
+  async findOne(@Param("_id") _id: string) {
     const res = await this.labelService.findOne(_id);
     return parseSuccessResponse({ data: res });
   }
@@ -58,7 +57,7 @@ export class LabelController {
    */
   @Patch(":_id")
   async update(
-    @Param("_id") _id: ObjectId,
+    @Param("_id") _id: string,
     @Body() updateProduceLabelDto: UpdateLabelDto
   ) {
     const res = await this.labelService.update(_id, updateProduceLabelDto);
@@ -70,9 +69,7 @@ export class LabelController {
    * @returns
    */
   @Delete(":_id")
-  async remove(
-    @Param("_id") _id: ObjectId
-  ): Promise<IResponseStructure<string>> {
+  async remove(@Param("_id") _id: string): Promise<IResponseStructure<string>> {
     await this.labelService.remove(_id);
     return parseSuccessResponse({
       data: "删除成功",

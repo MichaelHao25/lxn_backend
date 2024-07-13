@@ -1,5 +1,4 @@
 import { IsNotEmpty, IsOptional, IsString } from "class-validator";
-import { ObjectId } from "mongoose";
 
 export class CreateTypeDto {
   /**
@@ -7,7 +6,7 @@ export class CreateTypeDto {
    */
   @IsOptional()
   @IsString()
-  parent?: ObjectId;
+  parent?: string;
   /**
    * 类型名称
    */

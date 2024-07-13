@@ -8,7 +8,6 @@ import {
   Post,
   Query,
 } from "@nestjs/common";
-import { ObjectId } from "mongoose";
 import parseSuccessResponse from "src/common/parseSuccessResponse";
 import { AdService } from "./ad.service";
 import { CreateAdDto } from "./dto/create-ad.dto";
@@ -37,15 +36,16 @@ export class AdController {
   @Get()
   async findAll(@Query() query: FindAdDto) {
     const res = await this.adService.findAll(query);
-    return parseSuccessResponse(res);
+    return parseSuccessResponse({ data: res });
   }
   /**
    * 查询详情
    * @returns
    */
   @Get(":_id")
-  findOne(@Param("_id") _id: ObjectId) {
-    return this.adService.findOne(_id);
+  async findOne(@Param("_id") _id: string) {
+    const res = await this.adService.findOne(_id);
+    return parseSuccessResponse({ data: res });
   }
 
   /**
@@ -55,8 +55,9 @@ export class AdController {
    * @returns
    */
   @Patch(":_id")
-  update(@Param("_id") _id: ObjectId, @Body() updateAdDto: UpdateAdDto) {
-    return this.adService.update(_id, updateAdDto);
+  async update(@Param("_id") _id: string, @Body() updateAdDto: UpdateAdDto) {
+    const res = await this.adService.update(_id, updateAdDto);
+    return parseSuccessResponse({ data: res });
   }
   /**
    * 删除
@@ -64,7 +65,10 @@ export class AdController {
    * @returns
    */
   @Delete(":_id")
-  remove(@Param("_id") _id: ObjectId) {
-    return this.adService.remove(_id);
+  async remove(@Param("_id") _id: string) {
+    await this.adService.remove(_id);
+    return parseSuccessResponse({
+      data: "删除成功",
+    });
   }
 }

@@ -8,7 +8,6 @@ import {
   Post,
   Query,
 } from "@nestjs/common";
-import { ObjectId } from "mongoose";
 import { Public } from "src/common/decorators/public.decorator";
 import parseSuccessResponse from "src/common/parseSuccessResponse";
 import { IResponseStructure } from "src/utils/interface";
@@ -56,7 +55,7 @@ export class TypeController {
    * @returns
    */
   @Get(":_id")
-  async findOne(@Param("_id") _id: ObjectId) {
+  async findOne(@Param("_id") _id: string) {
     const res = await this.typeService.findOne(_id);
     return parseSuccessResponse({ data: res });
   }
@@ -67,7 +66,7 @@ export class TypeController {
    */
   @Patch(":_id")
   async update(
-    @Param("_id") _id: ObjectId,
+    @Param("_id") _id: string,
     @Body() updateProduceTypeDto: UpdateTypeDto
   ) {
     const res = await this.typeService.update(_id, updateProduceTypeDto);
@@ -79,9 +78,7 @@ export class TypeController {
    * @returns
    */
   @Delete(":_id")
-  async remove(
-    @Param("_id") _id: ObjectId
-  ): Promise<IResponseStructure<string>> {
+  async remove(@Param("_id") _id: string): Promise<IResponseStructure<string>> {
     await this.typeService.remove(_id);
     return parseSuccessResponse({
       data: "删除成功",

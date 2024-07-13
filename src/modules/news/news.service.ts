@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model, ObjectId } from "mongoose";
+import { Model } from "mongoose";
 import { TypeService } from "../type/type.service";
 import { CreateNewsDto } from "./dto/create-news.dto";
 import { FindNewsDto } from "./dto/find-news.dto";
@@ -71,12 +71,12 @@ export class NewsService {
     };
   }
 
-  async findOne(_id: ObjectId): Promise<NewsDocument> {
+  async findOne(_id: string): Promise<NewsDocument> {
     return await this.newsModel.findById(_id);
   }
 
   async update(
-    _id: ObjectId,
+    _id: string,
     updateNewsDto: UpdateNewsDto
   ): Promise<NewsDocument> {
     const news = await this.newsModel.findById(_id);
@@ -104,7 +104,7 @@ export class NewsService {
     return news;
   }
 
-  async remove(_id: ObjectId) {
+  async remove(_id: string) {
     await this.newsModel.deleteOne({ _id });
   }
 }

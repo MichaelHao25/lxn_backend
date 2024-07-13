@@ -10,7 +10,6 @@ import {
   Post,
   Query,
 } from "@nestjs/common";
-import { ObjectId } from "mongoose";
 import { Public } from "src/common/decorators/public.decorator";
 import parseSuccessResponse from "src/common/parseSuccessResponse";
 import { IResponseStructure } from "src/utils/interface";
@@ -31,9 +30,9 @@ export class ProductController {
    */
   @Post()
   async create(@Body() createProductDto: CreateProductDto) {
-    const { typeId } = createProductDto;
-    const type = await this.typeService.findOne(typeId);
-    if (type) {
+    const { type } = createProductDto;
+    const typeItem = await this.typeService.findOne(type);
+    if (typeItem) {
       const res = await this.productService.create(createProductDto);
       return parseSuccessResponse({ data: res });
     } else {
@@ -58,7 +57,7 @@ export class ProductController {
    */
   @Get(":_id")
   @Public()
-  async findOne(@Param("_id") _id: ObjectId) {
+  async findOne(@Param("_id") _id: string) {
     const res = await this.productService.findOne(_id);
     return parseSuccessResponse({ data: res });
   }
@@ -72,15 +71,15 @@ export class ProductController {
    */
   @Patch(":_id")
   async update(
-    @Param("_id") _id: ObjectId,
+    @Param("_id") _id: string,
     @Body() updateProductDto: UpdateProductDto
   ) {
     const { type } = updateProductDto;
     const product = await this.productService.findOne(_id);
     if (product) {
-      if (typeId) {
-        const type = await this.typeService.findOne(typeId);
-        if (type) {
+      if (type) {
+        const typeItem = await this.typeService.findOne(type);
+        if (typeItem) {
           const res = await this.productService.update(_id, updateProductDto);
           return parseSuccessResponse({ data: res });
         } else {
@@ -101,9 +100,7 @@ export class ProductController {
    * @returns
    */
   @Delete(":_id")
-  async remove(
-    @Param("_id") _id: ObjectId
-  ): Promise<IResponseStructure<string>> {
+  async remove(@Param("_id") _id: string): Promise<IResponseStructure<string>> {
     await this.productService.remove(_id);
     return parseSuccessResponse({
       data: "删除成功！",

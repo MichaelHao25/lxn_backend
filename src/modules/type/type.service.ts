@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model, ObjectId } from "mongoose";
+import { Model } from "mongoose";
 import { CreateTypeDto } from "./dto/create-type.dto";
 import { FindTypeDto, IProductOneLevelType } from "./dto/find-type.dto";
 import { UpdateTypeDto } from "./dto/update-type.dto";
@@ -30,7 +30,7 @@ export class TypeService {
 
   async findAll(
     params?: FindTypeDto
-  ): Promise<{ _id: ObjectId; title: string }[]> {
+  ): Promise<{ _id: string; title: string }[]> {
     const { type } = params;
     if (type) {
       const TopLevel = {
@@ -40,7 +40,7 @@ export class TypeService {
       const parentId = IProductOneLevelType.product;
       return await this.typeModel
         .find<{
-          _id: ObjectId;
+          _id: string;
           title: string;
         }>(
           {
@@ -55,7 +55,7 @@ export class TypeService {
     }
 
     const list = await this.typeModel.find<{
-      _id: ObjectId;
+      _id: string;
       title: string;
     }>(
       {},
@@ -67,12 +67,12 @@ export class TypeService {
     return list;
   }
 
-  async findOne(_id: ObjectId): Promise<TypeDocument> {
+  async findOne(_id: string): Promise<TypeDocument> {
     return await this.typeModel.findById(_id);
   }
 
   async update(
-    _id: ObjectId,
+    _id: string,
     updateTypeDto: UpdateTypeDto
   ): Promise<TypeDocument> {
     const type = await this.findOne(_id);
@@ -93,7 +93,7 @@ export class TypeService {
     new HttpException("id错误", HttpStatus.BAD_REQUEST);
   }
 
-  async remove(_id: ObjectId) {
+  async remove(_id: string) {
     await this.typeModel.deleteOne({ _id });
   }
 }

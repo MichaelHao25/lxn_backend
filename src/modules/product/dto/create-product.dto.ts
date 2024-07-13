@@ -6,14 +6,13 @@ import {
   IsString,
   IsUrl,
 } from "class-validator";
-import { ObjectId } from "mongoose";
 
 export class CreateProductDto {
   /**
    * 类型id
    */
   @IsString()
-  type: ObjectId;
+  type: string;
   /**
    * 产品标题
    */

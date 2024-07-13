@@ -8,7 +8,6 @@ import {
   Post,
   Query,
 } from "@nestjs/common";
-import { ObjectId } from "mongoose";
 import { Public } from "src/common/decorators/public.decorator";
 import parseSuccessResponse from "src/common/parseSuccessResponse";
 import { ContactUsService } from "./contact-us.service";
@@ -42,7 +41,7 @@ export class ContactUsController {
    * 根据id查询详情
    */
   @Get(":_id")
-  async findOne(@Param("_id") _id: ObjectId) {
+  async findOne(@Param("_id") _id: string) {
     const res = await this.contactUsService.findOne(_id);
     return parseSuccessResponse({ data: res });
   }
@@ -51,7 +50,7 @@ export class ContactUsController {
    */
   @Patch(":_id")
   async update(
-    @Param("_id") _id: ObjectId,
+    @Param("_id") _id: string,
     @Body() updateContactUsDto: UpdateContactUsDto
   ) {
     const res = await this.contactUsService.update(_id, updateContactUsDto);
@@ -61,7 +60,7 @@ export class ContactUsController {
    * 根据id删除
    */
   @Delete(":_id")
-  async remove(@Param("_id") _id: ObjectId) {
+  async remove(@Param("_id") _id: string) {
     await this.contactUsService.remove(_id);
     return parseSuccessResponse({ data: "删除成功!" });
   }

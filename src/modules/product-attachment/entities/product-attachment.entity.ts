@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { HydratedDocument } from "mongoose";
+import mongoose, { HydratedDocument } from "mongoose";
 
 export type ProductAttachmentDocument = HydratedDocument<ProductAttachment>;
 /**
@@ -19,12 +19,12 @@ export class ProductAttachment {
   /**
    * 附件所属的类型 id
    */
-  @Prop({ required: true })
+  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: "Type" })
   productType_id: string;
   /**
    * 附件所属产品id
    */
-  @Prop({ required: true })
+  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: "Type" })
   product_id: string;
   /**
    * 附件下载地址

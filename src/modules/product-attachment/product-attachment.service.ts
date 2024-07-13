@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { FilterQuery, Model, ObjectId } from "mongoose";
+import { FilterQuery, Model } from "mongoose";
 import { ProductService } from "../product/product.service";
 import { TypeService } from "../type/type.service";
 import { CreateProductAttachmentDto } from "./dto/create-product-attachment.dto";
@@ -86,7 +86,7 @@ export class ProductAttachmentService {
   //     return `This action updates a #${id} productAttachment`;
   //   }
 
-  async remove(_id: ObjectId) {
+  async remove(_id: string) {
     await this.productAttachmentModel.deleteOne({ _id });
   }
 }

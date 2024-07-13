@@ -7,7 +7,6 @@ import {
   Post,
   Query,
 } from "@nestjs/common";
-import { ObjectId } from "mongoose";
 import { Public } from "src/common/decorators/public.decorator";
 import parseSuccessResponse from "src/common/parseSuccessResponse";
 import { CreateProductAttachmentDto } from "./dto/create-product-attachment.dto";
@@ -60,7 +59,7 @@ export class ProductAttachmentController {
    * 删除一个附件
    */
   @Delete(":_id")
-  async remove(@Param("_id") _id: ObjectId) {
+  async remove(@Param("_id") _id: string) {
     await this.productAttachmentService.remove(_id);
     return parseSuccessResponse({
       data: "删除成功！",

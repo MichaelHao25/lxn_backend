@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model, ObjectId } from "mongoose";
+import { Model } from "mongoose";
 import { CreateAdDto } from "./dto/create-ad.dto";
 import { FindAdDto } from "./dto/find-ad.dto";
 import { UpdateAdDto } from "./dto/update-ad.dto";
@@ -20,7 +20,8 @@ export class AdService {
   async create(createAdDto: CreateAdDto): Promise<AdDocument> {
     const ad = new this.contactUsModel(createAdDto);
     await ad.save();
-    return ad;
+    const res = await this.findOne(ad._id.toString());
+    return res;
   }
 
   async findAll(query: FindAdDto): Promise<AdDocument[]> {
@@ -32,15 +33,20 @@ export class AdService {
     return res;
   }
 
-  findOne(_id: ObjectId): Promise<AdDocument> {
-    return this.contactUsModel.findById({ _id }, selectFields);
+  async findOne(_id: string): Promise<AdDocument> {
+    return await this.contactUsModel.findById({ _id }, selectFields);
   }
 
-  update(_id: ObjectId, updateAdDto: UpdateAdDto) {
-    return `This action updates a #${_id} ad`;
+  async update(_id: string, updateAdDto: UpdateAdDto) {
+    const res = await this.findOne(_id);
+    Object.keys(updateAdDto).map((key) => {
+      res[key] = updateAdDto[key];
+    });
+    await res.save();
+    return res;
   }
 
-  remove(_id: ObjectId) {
-    return `This action removes a #${_id} ad`;
+  async remove(_id: string) {
+    await this.contactUsModel.deleteOne({ _id });
   }
 }

@@ -8,6 +8,7 @@ import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { AllExceptionsFilter } from "./common/exceptionFilter/all-exception.filter";
 import database from "./config/database";
+import { AdModule } from "./modules/ad/ad.module";
 import { ContactUsModule } from "./modules/contact-us/contact-us.module";
 import { NewsModule } from "./modules/news/news.module";
 import { ProductAttachmentModule } from "./modules/product-attachment/product-attachment.module";
@@ -29,6 +30,7 @@ import { UserModule } from "./modules/user/user.module";
         limit: 60,
       },
     ]),
+    AdModule,
     ContactUsModule,
     UserModule,
     UploadModule,

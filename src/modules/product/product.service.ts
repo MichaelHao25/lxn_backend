@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model, ObjectId } from "mongoose";
+import { Model } from "mongoose";
 import { TypeService } from "../type/type.service";
 import { CreateProductDto } from "./dto/create-product.dto";
 import { FindProductDto } from "./dto/find-product.dto";
@@ -71,7 +71,7 @@ export class ProductService {
     };
   }
 
-  async findOne(_id: ObjectId): Promise<ProductDocument> {
+  async findOne(_id: string): Promise<ProductDocument> {
     return await this.productModel.findById(_id);
   }
 
