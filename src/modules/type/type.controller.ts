@@ -10,9 +10,9 @@ import {
 } from "@nestjs/common";
 import { Public } from "src/common/decorators/public.decorator";
 import parseSuccessResponse from "src/common/parseSuccessResponse";
-import { IResponseStructure } from "src/utils/interface";
+import { IResponseStructure } from "src/interface";
 import { CreateTypeDto } from "./dto/create-type.dto";
-import { FindTypeDto, IProductOneLevelType } from "./dto/find-type.dto";
+import { FindTypeDto } from "./dto/find-type.dto";
 import { UpdateTypeDto } from "./dto/update-type.dto";
 import { TypeService } from "./type.service";
 
@@ -38,15 +38,13 @@ export class TypeController {
   @Public()
   async findAll(@Query() query: FindTypeDto): Promise<IResponseStructure> {
     const { type } = query;
-    if (
-      [IProductOneLevelType.product, IProductOneLevelType.news].includes(type)
-    ) {
-      const res = await this.typeService.findAll({
-        type,
-      });
-      return parseSuccessResponse({ data: res });
-    }
-    const res = await this.typeService.findAll();
+    // if ([IProductOneLevelType.product].includes(type)) {
+    //   const res = await this.typeService.findAll({
+    //     type,
+    //   });
+    //   return parseSuccessResponse({ data: res });
+    // }
+    const res = await this.typeService.findAll({ type });
     return parseSuccessResponse({ data: res });
   }
   /**

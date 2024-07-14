@@ -1,12 +1,13 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
+import { IPageResponse } from "src/interface";
 import { CreateLabelDto } from "./dto/create-label.dto";
 import { FindLabelDto } from "./dto/find-label.dto";
 import { UpdateLabelDto } from "./dto/update-label.dto";
 import { Label, LabelDocument } from "./entities/label.entity";
 
-const selectFields = {
+export const LabelSelectFields = {
   _id: 1,
   title: 1,
 };
@@ -22,22 +23,36 @@ export class LabelService {
 
   async findAll(
     params: FindLabelDto
-  ): Promise<{ _id: string; title: string }[]> {
+  ): Promise<IPageResponse<{ _id: string; title: string }>> {
     const { current, pageSize } = params;
+    const queryExpress = {};
+    const total = await this.labelModel.countDocuments(queryExpress);
     const list = await this.labelModel
       .find<{
         _id: string;
         title: string;
-      }>({}, selectFields)
+      }>(queryExpress, LabelSelectFields)
       .limit(pageSize)
       .skip((current - 1) * pageSize);
-    return list;
+    return {
+      page: {
+        total,
+        current,
+        pageSize,
+      },
+      list,
+    };
   }
 
   async findOne(_id: string): Promise<LabelDocument> {
-    return await this.labelModel.findById(_id);
+    return await this.labelModel.findById(_id, LabelSelectFields);
   }
-
+  async findById(_idList: string[] = []): Promise<(LabelDocument | null)[]> {
+    const list = await Promise.all(
+      _idList.map(async (_id) => await this.findOne(_id))
+    );
+    return list;
+  }
   async update(
     _id: string,
     updateLabelDto: UpdateLabelDto

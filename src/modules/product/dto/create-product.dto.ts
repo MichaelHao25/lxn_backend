@@ -1,18 +1,28 @@
 import {
-  ArrayNotEmpty,
   IsArray,
+  IsEnum,
   IsNumber,
   IsOptional,
   IsString,
   IsUrl,
 } from "class-validator";
+import {
+  IAuthorizationInformation_monetizationMethods,
+  IAuthorizationInformation_property,
+  IAuthorizationInformation_scope,
+} from "../interface";
 
 export class CreateProductDto {
   /**
    * 类型id
    */
-  @IsString()
-  type: string;
+  @IsArray()
+  type: string[];
+  /**
+   * 产品标签
+   */
+  @IsArray()
+  label: string[];
   /**
    * 产品标题
    */
@@ -24,22 +34,58 @@ export class CreateProductDto {
   @IsUrl()
   mainPicture: string;
   /**
-   * banner 图
-   */
-  @IsArray()
-  @IsUrl({}, { each: true })
-  @ArrayNotEmpty()
-  banner: string[];
-  /**
    * 产品描述
    */
   @IsString()
   description: string;
   /**
-   * 产品详情
+   * 上线时间
    */
   @IsString()
-  details: string;
+  releaseDate: string;
+  /**
+   * 总集数
+   */
+  @IsString()
+  totalEpisodes: string;
+  /**
+   * 时长
+   */
+  @IsString()
+  duration: string;
+  /**
+   * 视频方向
+   */
+  @IsString()
+  videoDirection: string;
+  /**
+   * 授权信息 - 授权性质
+   */
+  @IsString()
+  @IsEnum(IAuthorizationInformation_property)
+  authorizationInformation_property: IAuthorizationInformation_property;
+  /**
+   * 授权信息 -- 首发平台
+   */
+  @IsString()
+  authorizationInformation_firstLaunchPlatform: string;
+  /**
+   * 授权信息 -- 范围
+   */
+  @IsString()
+  @IsEnum(IAuthorizationInformation_scope)
+  authorizationInformation_scope: IAuthorizationInformation_scope;
+  /**
+   * 授权信息 -- 变现方式
+   */
+  @IsString()
+  @IsEnum(IAuthorizationInformation_monetizationMethods)
+  authorizationInformation_monetizationMethods: IAuthorizationInformation_monetizationMethods;
+  /**
+   * 试看地址
+   */
+  @IsString()
+  pilotVideoAddress: string;
   /**
    * 顺序(越大越靠前)
    */

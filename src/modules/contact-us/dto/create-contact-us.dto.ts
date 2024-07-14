@@ -1,11 +1,4 @@
-import {
-  IsArray,
-  IsMobilePhone,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-} from "class-validator";
-import { AttributesItem } from "src/dto/index.dto";
+import { IsMobilePhone, IsNotEmpty, IsString } from "class-validator";
 
 export class CreateContactUsDto {
   @IsString()
@@ -20,7 +13,8 @@ export class CreateContactUsDto {
   @IsMobilePhone("zh-CN")
   @IsNotEmpty()
   tel: string;
-  @IsArray()
-  @IsOptional()
-  appendAttributes?: AttributesItem[];
+  @IsString()
+  understandType: string;
+  @IsString()
+  scopeOfAuthority: string;
 }

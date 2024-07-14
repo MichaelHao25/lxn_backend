@@ -1,4 +1,25 @@
-import { OmitType } from "@nestjs/swagger";
-import { Banner } from "../entities/banner.entity";
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUrl,
+} from "class-validator";
+import { IBannerType } from "../interface";
 
-export class CreateBannerDto extends OmitType(Banner, ["updateAt"]) {}
+export class CreateBannerDto {
+  /**
+   * 类型
+   */
+  @IsEnum(IBannerType)
+  @IsNotEmpty()
+  type: IBannerType;
+  @IsString()
+  @IsOptional()
+  title?: string;
+  @IsString()
+  @IsOptional()
+  description?: string;
+  @IsUrl()
+  url: string;
+}

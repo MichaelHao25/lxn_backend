@@ -7,11 +7,17 @@ export class FindProductDto extends PageConfig {
    */
   @IsOptional()
   @IsString()
-  typeId?: string;
+  type?: string;
   /**
    * 产品标题
    */
   @IsOptional()
   @IsString()
   title?: string;
+  /**
+   * 标签id
+   */
+  @IsOptional()
+  @IsString()
+  label?: string;
 }

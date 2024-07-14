@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
+import { IPageResponse } from "src/interface";
 import { CreateBannerDto } from "./dto/create-banner.dto";
 import { FindBannerDto } from "./dto/find-banner.dto";
 import { UpdateBannerDto } from "./dto/update-banner.dto";
@@ -24,13 +25,23 @@ export class BannerService {
     return res;
   }
 
-  async findAll(query: FindBannerDto): Promise<BannerDocument[]> {
-    const { current, pageSize } = query;
-    const res = await this.bannerModel
-      .find({}, selectFields)
+  async findAll(query: FindBannerDto): Promise<IPageResponse<BannerDocument>> {
+    const { current, pageSize, type } = query;
+    const queryExpress = {};
+    const total = await this.bannerModel.countDocuments(queryExpress);
+
+    const list = await this.bannerModel
+      .find({ type }, selectFields)
       .limit(pageSize)
       .skip((current - 1) * pageSize);
-    return res;
+    return {
+      page: {
+        total,
+        current,
+        pageSize,
+      },
+      list,
+    };
   }
 
   async findOne(_id: string): Promise<BannerDocument> {

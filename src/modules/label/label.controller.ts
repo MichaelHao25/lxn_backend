@@ -10,7 +10,7 @@ import {
 } from "@nestjs/common";
 import { Public } from "src/common/decorators/public.decorator";
 import parseSuccessResponse from "src/common/parseSuccessResponse";
-import { IResponseStructure } from "src/utils/interface";
+import { IResponseStructure } from "src/interface";
 import { CreateLabelDto } from "./dto/create-label.dto";
 import { FindLabelDto } from "./dto/find-label.dto";
 import { UpdateLabelDto } from "./dto/update-label.dto";

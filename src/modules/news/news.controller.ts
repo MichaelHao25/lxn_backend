@@ -12,7 +12,7 @@ import {
 } from "@nestjs/common";
 import { Public } from "src/common/decorators/public.decorator";
 import parseSuccessResponse from "src/common/parseSuccessResponse";
-import { IResponseStructure } from "src/utils/interface";
+import { IResponseStructure } from "src/interface";
 import { TypeService } from "../type/type.service";
 import { CreateNewsDto } from "./dto/create-news.dto";
 import { FindNewsDto } from "./dto/find-news.dto";
@@ -30,14 +30,8 @@ export class NewsController {
    */
   @Post()
   async create(@Body() createNewsDto: CreateNewsDto) {
-    const { typeId } = createNewsDto;
-    const type = await this.typeService.findOne(typeId);
-    if (type) {
-      const res = await this.newsService.create(createNewsDto);
-      return parseSuccessResponse({ data: res });
-    } else {
-      throw new HttpException("类型不存在", HttpStatus.NOT_ACCEPTABLE);
-    }
+    const res = await this.newsService.create(createNewsDto);
+    return parseSuccessResponse({ data: res });
   }
 
   /**
@@ -72,12 +66,12 @@ export class NewsController {
     @Param("_id") _id: string,
     @Body() updateNewsDto: UpdateNewsDto
   ) {
-    const { typeId } = updateNewsDto;
+    const { type } = updateNewsDto;
     const news = await this.newsService.findOne(_id);
     if (news) {
-      if (typeId) {
-        const type = await this.typeService.findOne(typeId);
-        if (type) {
+      if (type) {
+        const typeItem = await this.typeService.findOne(type);
+        if (typeItem) {
           const res = await this.newsService.update(_id, updateNewsDto);
           return parseSuccessResponse({ data: res });
         } else {

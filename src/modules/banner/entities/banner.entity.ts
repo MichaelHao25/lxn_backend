@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { IsNotEmpty, IsOptional, IsString, IsUrl } from "class-validator";
 import { HydratedDocument } from "mongoose";
+import { IBannerType } from "../interface";
 
 export type BannerDocument = HydratedDocument<Banner>;
 
@@ -25,7 +26,7 @@ export class Banner {
   @IsString()
   @IsNotEmpty()
   @Prop({ required: true })
-  type: string;
+  type: IBannerType;
   @IsString()
   @IsOptional()
   @Prop({ required: true })

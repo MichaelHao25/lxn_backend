@@ -13,5 +13,6 @@ import { Banner, BannerSchema } from "./entities/banner.entity";
   ],
   controllers: [BannerController],
   providers: [BannerService],
+  exports: [BannerService],
 })
 export class BannerModule {}

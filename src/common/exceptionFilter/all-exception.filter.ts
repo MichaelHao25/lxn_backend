@@ -6,7 +6,7 @@ import {
   HttpStatus,
 } from "@nestjs/common";
 import { HttpAdapterHost } from "@nestjs/core";
-import { IErrorShowType, IResponseStructure } from "src/utils/interface";
+import { IErrorShowType, IResponseStructure } from "src/interface";
 
 /**
  * 全局范围内的过滤器

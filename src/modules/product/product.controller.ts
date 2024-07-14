@@ -12,7 +12,7 @@ import {
 } from "@nestjs/common";
 import { Public } from "src/common/decorators/public.decorator";
 import parseSuccessResponse from "src/common/parseSuccessResponse";
-import { IResponseStructure } from "src/utils/interface";
+import { IResponseStructure } from "src/interface";
 import { TypeService } from "../type/type.service";
 import { CreateProductDto } from "./dto/create-product.dto";
 import { FindProductDto } from "./dto/find-product.dto";
@@ -31,8 +31,8 @@ export class ProductController {
   @Post()
   async create(@Body() createProductDto: CreateProductDto) {
     const { type } = createProductDto;
-    const typeItem = await this.typeService.findOne(type);
-    if (typeItem) {
+    const typeList = await this.typeService.findById(type);
+    if (typeList.every((item) => item !== null)) {
       const res = await this.productService.create(createProductDto);
       return parseSuccessResponse({ data: res });
     } else {
@@ -78,8 +78,8 @@ export class ProductController {
     const product = await this.productService.findOne(_id);
     if (product) {
       if (type) {
-        const typeItem = await this.typeService.findOne(type);
-        if (typeItem) {
+        const typeItem = await this.typeService.findById(type);
+        if (typeItem.every((item) => item !== null)) {
           const res = await this.productService.update(_id, updateProductDto);
           return parseSuccessResponse({ data: res });
         } else {

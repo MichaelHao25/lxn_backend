@@ -1,4 +1,4 @@
-import { IResponseStructure } from "src/utils/interface";
+import { IResponseStructure } from "src/interface";
 
 /**
  * 构造一个标准的响应体

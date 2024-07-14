@@ -14,7 +14,7 @@ export class Label {
   /**
    * 标题
    */
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   title: string;
   /**
    * 更新时间

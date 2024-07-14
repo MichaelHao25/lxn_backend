@@ -166,8 +166,6 @@ export class UploadService {
 
   /**
    * 上传到oss
-   * TODO 2023-12-31 00:18
-   * @description 暂时上传到oss不存储到数据库
    * @return 返回文件路径列表
    */
   async uploadOss(files: SavedMultipartFile[]): Promise<IUpdateFile[]> {

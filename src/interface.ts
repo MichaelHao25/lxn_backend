@@ -81,3 +81,11 @@ export interface IResponseStructure<T = any> {
    */
   showType?: IErrorShowType;
 }
+export interface IPageResponse<T = unknown> {
+  page: {
+    total: number;
+    current: number;
+    pageSize: number;
+  };
+  list: T[];
+}

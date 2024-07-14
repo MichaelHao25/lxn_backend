@@ -9,8 +9,11 @@ import { AppService } from "./app.service";
 import { AllExceptionsFilter } from "./common/exceptionFilter/all-exception.filter";
 import database from "./config/database";
 import { AdModule } from "./modules/ad/ad.module";
+import { BannerModule } from "./modules/banner/banner.module";
 import { ContactUsModule } from "./modules/contact-us/contact-us.module";
+import { LabelModule } from "./modules/label/label.module";
 import { NewsModule } from "./modules/news/news.module";
+import { PageModule } from "./modules/page/page.module";
 import { ProductAttachmentModule } from "./modules/product-attachment/product-attachment.module";
 import { ProductModule } from "./modules/product/product.module";
 import { TypeModule } from "./modules/type/type.module";
@@ -38,6 +41,9 @@ import { UserModule } from "./modules/user/user.module";
     ProductModule,
     ProductAttachmentModule,
     NewsModule,
+    BannerModule,
+    LabelModule,
+    PageModule,
   ],
   controllers: [AppController],
   providers: [

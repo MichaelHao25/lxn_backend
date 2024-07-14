@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { HydratedDocument } from "mongoose";
+import mongoose, { HydratedDocument } from "mongoose";
 
 export type TypeDocument = HydratedDocument<Type>;
 /**
@@ -14,13 +14,18 @@ export class Type {
   /**
    * 标题
    */
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   title: string;
   /**
    * 父类型名称(_id)
    */
-  @Prop({ required: false, default: "" })
-  parent: string;
+  @Prop({
+    required: false,
+    default: "",
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Type",
+  })
+  parent?: Type;
   /**
    * 顺序(越大越靠前)
    */

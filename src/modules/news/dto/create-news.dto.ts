@@ -1,11 +1,14 @@
-import { IsString, IsUrl } from "class-validator";
+import { IsArray, IsOptional, IsString, IsUrl } from "class-validator";
 
 export class CreateNewsDto {
   /**
    * 类型id
    */
   @IsString()
-  typeId: string;
+  @IsOptional()
+  type?: string;
+  @IsArray()
+  label: string[];
   /**
    * 产品标题
    */
@@ -16,11 +19,6 @@ export class CreateNewsDto {
    */
   @IsUrl()
   mainPicture: string;
-  /**
-   * 详情首页上的图片
-   */
-  @IsString()
-  detailsPicture: string;
   /**
    * 产品描述
    */

@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument } from "mongoose";
-import { AttributesItem } from "src/dto/index.dto";
 
 export type ContactUsDocument = HydratedDocument<ContactUs>;
 /**
@@ -33,13 +32,15 @@ export class ContactUs {
   @Prop({ required: true })
   tel: string;
   /**
-   * 附加属性
+   * 了解类型
    */
-  @Prop({
-    type: [AttributesItem],
-    default: [],
-  })
-  appendAttributes: AttributesItem[];
+  @Prop({ required: true })
+  understandType: string;
+  /**
+   * 授权范围
+   */
+  @Prop({ required: true })
+  scopeOfAuthority: string;
   /**
    * 更新时间
    */

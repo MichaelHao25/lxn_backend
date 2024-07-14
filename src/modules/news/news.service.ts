@@ -1,17 +1,26 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { TypeService } from "../type/type.service";
+import { LabelService } from "../label/label.service";
+import { TypeSelectFields, TypeService } from "../type/type.service";
 import { CreateNewsDto } from "./dto/create-news.dto";
 import { FindNewsDto } from "./dto/find-news.dto";
 import { UpdateNewsDto } from "./dto/update-news.dto";
 import { News, NewsDocument } from "./entities/news.entity";
-
+export const NewSelectFields = {
+  title: 1,
+  _id: 1,
+  mainPicture: 1,
+  typeId: 1,
+  updatedAt: 1,
+  description: 1,
+};
 @Injectable()
 export class NewsService {
   constructor(
     @InjectModel(News.name) private newsModel: Model<News>,
-    private readonly typeService: TypeService
+    private readonly typeService: TypeService,
+    private readonly labelService: LabelService
   ) {}
   /**
    * 创建一个新的产品
@@ -19,15 +28,33 @@ export class NewsService {
    * @returns
    */
   async create(createNewsDto: CreateNewsDto): Promise<NewsDocument> {
-    const news = new this.newsModel(createNewsDto);
+    const { type, label, ...attr } = createNewsDto;
+    const news = new this.newsModel(attr);
+    if (type) {
+      const typeItem = await this.typeService.findOne(type);
+      if (typeItem) {
+        news.type = typeItem;
+      } else {
+        throw new HttpException("类型不存在", HttpStatus.NOT_ACCEPTABLE);
+      }
+    }
+    if (label) {
+      const labelList = await this.labelService.findById(label);
+      if (labelList.every((item) => item !== null)) {
+        news.label = labelList;
+      } else {
+        throw new HttpException("标签不存在", HttpStatus.NOT_ACCEPTABLE);
+      }
+    }
     await news.save();
     return news;
   }
 
   async findAll(query: FindNewsDto) {
-    const { current, pageSize, typeId, title } = query;
+    const { current, pageSize, type, title, label } = query;
     const queryExpress = {
-      ...(typeId ? { typeId } : {}),
+      ...(type ? { type } : {}),
+      ...(label ? { label } : {}),
       ...(title
         ? {
             title: { $regex: title },
@@ -35,32 +62,12 @@ export class NewsService {
         : {}),
     };
     const total = await this.newsModel.countDocuments(queryExpress);
-    const res = await this.newsModel
-      .find(queryExpress, {
-        title: 1,
-        _id: 1,
-        mainPicture: 1,
-        typeId: 1,
-        updatedAt: 1,
-        description: 1,
-      })
+    const list = await this.newsModel
+      .find(queryExpress, NewSelectFields)
       .limit(pageSize)
-      .skip((current - 1) * pageSize);
-    const list = await Promise.all(
-      res.map(async (item) => {
-        const { typeId, _id, title, mainPicture, updatedAt, description } =
-          item;
-        const type = await this.typeService.findOne(typeId);
-        return {
-          _id,
-          title,
-          mainPicture,
-          updatedAt,
-          type: type.title,
-          description,
-        };
-      })
-    );
+      .skip((current - 1) * pageSize)
+      .populate("type", TypeSelectFields);
+
     return {
       page: {
         total,
@@ -80,26 +87,26 @@ export class NewsService {
     updateNewsDto: UpdateNewsDto
   ): Promise<NewsDocument> {
     const news = await this.newsModel.findById(_id);
-    const { typeId, title, mainPicture, detailsPicture, description, details } =
-      updateNewsDto;
-    if (typeId) {
-      news.typeId = typeId;
+    const { type, label, ...attr } = updateNewsDto;
+    if (type) {
+      const typeItem = await this.typeService.findOne(type);
+      if (typeItem) {
+        news.type = typeItem;
+      } else {
+        throw new HttpException("类型不存在", HttpStatus.NOT_ACCEPTABLE);
+      }
     }
-    if (title) {
-      news.title = title;
+    if (label) {
+      const labelList = await this.labelService.findById(label);
+      if (labelList.every((item) => item !== null)) {
+        news.label = labelList;
+      } else {
+        throw new HttpException("标签不存在", HttpStatus.NOT_ACCEPTABLE);
+      }
     }
-    if (mainPicture) {
-      news.mainPicture = mainPicture;
-    }
-    if (detailsPicture) {
-      news.detailsPicture = detailsPicture;
-    }
-    if (description) {
-      news.description = description;
-    }
-    if (details) {
-      news.details = details;
-    }
+    Object.entries(attr).forEach(([key, value]) => {
+      news[key] = value;
+    });
     await news.save();
     return news;
   }

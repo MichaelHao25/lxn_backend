@@ -7,11 +7,14 @@ export class FindNewsDto extends PageConfig {
    */
   @IsOptional()
   @IsString()
-  typeId?: string;
+  type?: string;
   /**
    * 产品标题
    */
   @IsOptional()
   @IsString()
   title?: string;
+  @IsOptional()
+  @IsString()
+  label?: string;
 }

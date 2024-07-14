@@ -1,12 +1,13 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
+import { IPageResponse } from "src/interface";
 import { CreateAdDto } from "./dto/create-ad.dto";
 import { FindAdDto } from "./dto/find-ad.dto";
 import { UpdateAdDto } from "./dto/update-ad.dto";
 import { Ad, AdDocument } from "./entities/ad.entity";
 
-const selectFields = {
+const AdSelectFields = {
   _id: 1,
   type: 1,
   title: 1,
@@ -16,25 +17,34 @@ const selectFields = {
 };
 @Injectable()
 export class AdService {
-  constructor(@InjectModel(Ad.name) private contactUsModel: Model<Ad>) {}
+  constructor(@InjectModel(Ad.name) private adModel: Model<Ad>) {}
   async create(createAdDto: CreateAdDto): Promise<AdDocument> {
-    const ad = new this.contactUsModel(createAdDto);
+    const ad = new this.adModel(createAdDto);
     await ad.save();
     const res = await this.findOne(ad._id.toString());
     return res;
   }
 
-  async findAll(query: FindAdDto): Promise<AdDocument[]> {
-    const { pageSize, current } = query;
-    const res = await this.contactUsModel
-      .find({}, selectFields)
+  async findAll(query: FindAdDto): Promise<IPageResponse<AdDocument>> {
+    const { pageSize, current, type } = query;
+    const queryExpress = { type };
+    const total = await this.adModel.countDocuments(queryExpress);
+    const list = await this.adModel
+      .find(queryExpress, AdSelectFields)
       .limit(pageSize)
       .skip((current - 1) * pageSize);
-    return res;
+    return {
+      page: {
+        total,
+        current,
+        pageSize,
+      },
+      list,
+    };
   }
 
   async findOne(_id: string): Promise<AdDocument> {
-    return await this.contactUsModel.findById({ _id }, selectFields);
+    return await this.adModel.findById({ _id }, AdSelectFields);
   }
 
   async update(_id: string, updateAdDto: UpdateAdDto) {
@@ -47,6 +57,6 @@ export class AdService {
   }
 
   async remove(_id: string) {
-    await this.contactUsModel.deleteOne({ _id });
+    await this.adModel.deleteOne({ _id });
   }
 }

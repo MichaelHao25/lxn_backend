@@ -1,17 +1,37 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { TypeService } from "../type/type.service";
+import { LabelSelectFields, LabelService } from "../label/label.service";
+import { TypeSelectFields, TypeService } from "../type/type.service";
 import { CreateProductDto } from "./dto/create-product.dto";
 import { FindProductDto } from "./dto/find-product.dto";
 import { UpdateProductDto } from "./dto/update-product.dto";
 import { Product, ProductDocument } from "./entities/product.entity";
 
+const selectFields = {
+  _id: 1,
+  type: 1,
+  label: 1,
+  title: 1,
+  mainPicture: 1,
+  description: 1,
+  releaseDate: 1,
+  totalEpisodes: 1,
+  duration: 1,
+  videoDirection: 1,
+  authorizationInformation_property: 1,
+  authorizationInformation_firstLaunchPlatform: 1,
+  authorizationInformation_scope: 1,
+  authorizationInformation_monetizationMethods: 1,
+  pilotVideoAddress: 1,
+  updateAt: 1,
+};
 @Injectable()
 export class ProductService {
   constructor(
     @InjectModel(Product.name) private productModel: Model<Product>,
-    private readonly typeService: TypeService
+    private readonly typeService: TypeService,
+    private readonly labelService: LabelService
   ) {}
   /**
    * 创建一个新的产品
@@ -19,15 +39,21 @@ export class ProductService {
    * @returns
    */
   async create(createProductDto: CreateProductDto): Promise<ProductDocument> {
-    const product = new this.productModel(createProductDto);
+    const { type, label, ...productAttr } = createProductDto;
+    const product = new this.productModel(productAttr);
+    const allType = await this.typeService.findById(type);
+    const allLabel = await this.labelService.findById(label);
+    product.type = allType;
+    product.label = allLabel;
     await product.save();
     return product;
   }
 
   async findAll(query: FindProductDto) {
-    const { current, pageSize, typeId, title } = query;
+    const { current, pageSize, type, title, label } = query;
     const queryExpress = {
-      ...(typeId ? { typeId } : {}),
+      ...(type ? { type } : {}),
+      ...(label ? { label } : {}),
       ...(title
         ? {
             title: { $regex: title },
@@ -36,43 +62,24 @@ export class ProductService {
     };
     const total = await this.productModel.countDocuments(queryExpress);
     const res = await this.productModel
-      .find(queryExpress, {
-        title: 1,
-        _id: 1,
-        mainPicture: 1,
-        typeId: 1,
-        updatedAt: 1,
-        order: 1,
-      })
+      .find(queryExpress, selectFields)
       .limit(pageSize)
       .skip((current - 1) * pageSize)
-      .sort({ order: -1 });
-    const list = await Promise.all(
-      res.map(async (item) => {
-        const { type, _id, title, mainPicture, updatedAt, order } = item;
-        const typeItem = await this.typeService.findOne(type);
-        return {
-          _id,
-          title,
-          mainPicture,
-          updatedAt,
-          type: typeItem.title,
-          order,
-        };
-      })
-    );
+      .sort({ order: -1 })
+      .populate("type", TypeSelectFields)
+      .populate("label", LabelSelectFields);
     return {
       page: {
         total,
         current,
         pageSize,
       },
-      list,
+      list: res,
     };
   }
 
   async findOne(_id: string): Promise<ProductDocument> {
-    return await this.productModel.findById(_id);
+    return await this.productModel.findById(_id, selectFields);
   }
 
   async update(
@@ -80,10 +87,11 @@ export class ProductService {
     updateProductDto: UpdateProductDto
   ): Promise<ProductDocument> {
     const product = await this.productModel.findById(_id);
-    const { type, title, mainPicture, banner, description, details, order } =
-      updateProductDto;
+    const { type, title, mainPicture, description, order } = updateProductDto;
+
     if (type) {
-      product.type = type;
+      const typeItem = await this.typeService.findById(type);
+      product.type = typeItem;
     }
     if (title) {
       product.title = title;
@@ -91,14 +99,8 @@ export class ProductService {
     if (mainPicture) {
       product.mainPicture = mainPicture;
     }
-    if (banner) {
-      product.banner = banner;
-    }
     if (description) {
       product.description = description;
-    }
-    if (details) {
-      product.details = details;
     }
     if (order) {
       product.order = order;

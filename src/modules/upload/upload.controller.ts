@@ -11,7 +11,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import * as fs from "node:fs";
 import { Public } from "src/common/decorators/public.decorator";
 import parseSuccessResponse from "src/common/parseSuccessResponse";
-import { ParamsIdValidator } from "src/utils/interface";
+import { ParamsIdValidator } from "src/interface";
 import { IUpdateFile } from "./interface";
 import { UploadService } from "./upload.service";
 // const pump = util.promisify(stream.pipeline);
@@ -63,7 +63,7 @@ export class UploadController {
      */
 
     const files = await req.saveRequestFiles();
-    const list = await this.uploadService.updateToLocalDisk(files);
+    const list = await this.uploadService.uploadOss(files);
     res.send(
       parseSuccessResponse<IUpdateFile[]>({
         data: list,

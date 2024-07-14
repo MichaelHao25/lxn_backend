@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument } from "mongoose";
-
+import { IAdType } from "../interface";
 export type AdDocument = HydratedDocument<Ad>;
 
 @Schema({
@@ -13,7 +13,7 @@ export class Ad {
    * 类型
    */
   @Prop({ required: true })
-  type: string;
+  type: IAdType;
   /**
    * 标题
    */
@@ -29,6 +29,11 @@ export class Ad {
    */
   @Prop({ required: true })
   url: string;
+  /**
+   * 颜色
+   */
+  @Prop()
+  backgroundColor?: string;
   /**
    * 更新时间
    */

@@ -1,5 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose, { HydratedDocument } from "mongoose";
+import { Label } from "src/modules/label/entities/label.entity";
+import { Type } from "src/modules/type/entities/type.entity";
 
 export type NewsDocument = HydratedDocument<News>;
 @Schema({
@@ -11,8 +13,16 @@ export class News {
   /**
    * 类型id
    */
-  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: "Type" })
-  typeId: string;
+  @Prop({ required: false, type: mongoose.Schema.Types.ObjectId, ref: "Type" })
+  type?: Type;
+  /**
+   * 产品标签
+   */
+  @Prop({
+    required: true,
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Label" }],
+  })
+  label: Label[];
   /**
    * 产品标题
    */
@@ -23,11 +33,6 @@ export class News {
    */
   @Prop({ required: true })
   mainPicture: string;
-  /**
-   * 详情首页上的图片
-   */
-  @Prop({ required: true })
-  detailsPicture: string;
   /**
    * 产品描述
    */

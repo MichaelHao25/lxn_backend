@@ -1,12 +1,21 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import {
+  IsEnum,
+  isHexColor,
+  IsNotEmpty,
+  IsOptional,
+  isRgbColor,
+  IsString,
+  Validate,
+} from "class-validator";
+import { IAdType } from "../interface";
 
 export class CreateAdDto {
   /**
    * 类型
    */
-  @IsString()
+  @IsEnum(IAdType)
   @IsNotEmpty()
-  type: string;
+  type: IAdType;
   /**
    * 标题
    */
@@ -25,4 +34,14 @@ export class CreateAdDto {
   @IsString()
   @IsNotEmpty()
   url: string;
+  /**
+   * 背景颜色 只能是
+   */
+  @Validate((backgroundColor) => {
+    if (isHexColor(backgroundColor) || isRgbColor(backgroundColor)) {
+      return true;
+    }
+  })
+  @IsOptional()
+  backgroundColor?: string;
 }
