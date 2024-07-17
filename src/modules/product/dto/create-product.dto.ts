@@ -32,7 +32,7 @@ export class CreateProductDto {
    * 产品主图
    */
   @IsUrl()
-  mainPicture: string;
+  mainPictureUrl: string;
   /**
    * 产品描述
    */
@@ -42,17 +42,22 @@ export class CreateProductDto {
    * 上线时间
    */
   @IsString()
-  releaseDate: string;
+  releaseDate_start: string;
+  /**
+   * 上线时间
+   */
+  @IsString()
+  releaseDate_end: string;
   /**
    * 总集数
    */
-  @IsString()
-  totalEpisodes: string;
+  @IsNumber()
+  totalEpisodes: number;
   /**
    * 时长
    */
-  @IsString()
-  duration: string;
+  @IsNumber()
+  duration: number;
   /**
    * 视频方向
    */
@@ -67,8 +72,8 @@ export class CreateProductDto {
   /**
    * 授权信息 -- 首发平台
    */
-  @IsString()
-  authorizationInformation_firstLaunchPlatform: string;
+  @IsNumber()
+  authorizationInformation_firstLaunchPlatform: number;
   /**
    * 授权信息 -- 范围
    */

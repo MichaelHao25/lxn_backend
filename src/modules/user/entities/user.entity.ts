@@ -7,7 +7,7 @@ export type UserDocument = HydratedDocument<User>;
  */
 @Schema({
   timestamps: {
-    updatedAt: "updateAt",
+    updatedAt: "updatedAt",
   },
 })
 export class User {
@@ -35,7 +35,7 @@ export class User {
    * 更新时间
    */
   @Prop({ default: Date.now })
-  updateAt: Date;
+  updatedAt: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

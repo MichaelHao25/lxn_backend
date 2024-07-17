@@ -7,7 +7,7 @@ export type ContactUsDocument = HydratedDocument<ContactUs>;
  */
 @Schema({
   timestamps: {
-    updatedAt: "updateAt",
+    updatedAt: "updatedAt",
   },
 })
 export class ContactUs {
@@ -20,7 +20,7 @@ export class ContactUs {
    * 公司名称
    */
   @Prop({ required: true })
-  company: string;
+  companyName: string;
   /**
    * 姓名
    */
@@ -45,7 +45,7 @@ export class ContactUs {
    * 更新时间
    */
   @Prop({ default: Date.now })
-  updateAt: Date;
+  updatedAt: Date;
 }
 
 export const ContactUsSchema = SchemaFactory.createForClass(ContactUs);

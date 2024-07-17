@@ -7,5 +7,8 @@ export class FindTypeDto extends PageConfig {
    */
   @IsOptional()
   @IsString()
-  type?: string;
+  parent?: string;
+  @IsOptional()
+  @IsString()
+  title?: string;
 }

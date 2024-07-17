@@ -14,4 +14,24 @@ export class FindContactUsDto extends PageConfig {
   @IsOptional()
   @IsString()
   origin?: string;
+
+  /**
+   * 公司名称
+   */
+  @IsOptional()
+  @IsString()
+  companyName?: string;
+
+  /**
+   * 姓名
+   */
+  @IsOptional()
+  @IsString()
+  name?: string;
+  /**
+   * 电话
+   */
+  @IsOptional()
+  @IsString()
+  tel?: string;
 }

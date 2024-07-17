@@ -13,6 +13,7 @@ import {
 import { Public } from "src/common/decorators/public.decorator";
 import parseSuccessResponse from "src/common/parseSuccessResponse";
 import { IResponseStructure } from "src/interface";
+import { LabelService } from "../label/label.service";
 import { TypeService } from "../type/type.service";
 import { CreateProductDto } from "./dto/create-product.dto";
 import { FindProductDto } from "./dto/find-product.dto";
@@ -23,7 +24,8 @@ import { ProductService } from "./product.service";
 export class ProductController {
   constructor(
     private readonly productService: ProductService,
-    private readonly typeService: TypeService
+    private readonly typeService: TypeService,
+    private readonly labelService: LabelService
   ) {}
   /**
    * 创建一个新的产品
@@ -74,21 +76,23 @@ export class ProductController {
     @Param("_id") _id: string,
     @Body() updateProductDto: UpdateProductDto
   ) {
-    const { type } = updateProductDto;
+    const { type, label } = updateProductDto;
     const product = await this.productService.findOne(_id);
     if (product) {
-      if (type) {
-        const typeItem = await this.typeService.findById(type);
-        if (typeItem.every((item) => item !== null)) {
-          const res = await this.productService.update(_id, updateProductDto);
-          return parseSuccessResponse({ data: res });
-        } else {
+      if (label) {
+        const labelList = await this.labelService.findById(label);
+        if (labelList.every((item) => item === null)) {
           return new HttpException("类型不正确", HttpStatus.FORBIDDEN);
         }
-      } else {
-        const res = await this.productService.update(_id, updateProductDto);
-        return parseSuccessResponse({ data: res });
       }
+      if (type) {
+        const typeList = await this.typeService.findById(type);
+        if (typeList.every((item) => item === null)) {
+          return new HttpException("类型不正确", HttpStatus.FORBIDDEN);
+        }
+      }
+      const res = await this.productService.update(_id, updateProductDto);
+      return parseSuccessResponse({ data: res });
     } else {
       return new HttpException("id不正确", HttpStatus.FORBIDDEN);
     }

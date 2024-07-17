@@ -10,6 +10,7 @@ import { Label, LabelDocument } from "./entities/label.entity";
 export const LabelSelectFields = {
   _id: 1,
   title: 1,
+  updatedAt: 1,
 };
 @Injectable()
 export class LabelService {
@@ -24,8 +25,14 @@ export class LabelService {
   async findAll(
     params: FindLabelDto
   ): Promise<IPageResponse<{ _id: string; title: string }>> {
-    const { current, pageSize } = params;
-    const queryExpress = {};
+    const { current, pageSize, title } = params;
+    const queryExpress = {
+      ...(title
+        ? {
+            title: { $regex: title },
+          }
+        : {}),
+    };
     const total = await this.labelModel.countDocuments(queryExpress);
     const list = await this.labelModel
       .find<{
@@ -33,7 +40,8 @@ export class LabelService {
         title: string;
       }>(queryExpress, LabelSelectFields)
       .limit(pageSize)
-      .skip((current - 1) * pageSize);
+      .skip((current - 1) * pageSize)
+      .sort({ updatedAt: -1 });
     return {
       page: {
         total,
@@ -58,13 +66,14 @@ export class LabelService {
     updateLabelDto: UpdateLabelDto
   ): Promise<LabelDocument> {
     const label = await this.findOne(_id);
-    const { title } = updateLabelDto;
     if (label) {
-      label.title = title;
+      Object.keys(updateLabelDto).map((key) => {
+        label[key] = updateLabelDto[key];
+      });
       await label.save();
       return label;
     }
-    new HttpException("id错误", HttpStatus.BAD_REQUEST);
+    throw new HttpException("id错误", HttpStatus.BAD_REQUEST);
   }
 
   async remove(_id: string) {

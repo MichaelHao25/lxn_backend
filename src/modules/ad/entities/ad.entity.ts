@@ -2,17 +2,16 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument } from "mongoose";
 import { IAdType } from "../interface";
 export type AdDocument = HydratedDocument<Ad>;
-
 @Schema({
   timestamps: {
-    updatedAt: "updateAt",
+    updatedAt: "updatedAt",
   },
 })
 export class Ad {
   /**
    * 类型
    */
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   type: IAdType;
   /**
    * 标题
@@ -28,17 +27,22 @@ export class Ad {
    * url
    */
   @Prop({ required: true })
-  url: string;
+  pictureUrl: string;
+  /**
+   * 跳转地址
+   */
+  @Prop({ required: true })
+  gotoUrl: string;
   /**
    * 颜色
    */
   @Prop()
-  backgroundColor?: string;
+  backgroundColor: string;
   /**
    * 更新时间
    */
   @Prop({ default: Date.now })
-  updateAt: Date;
+  updatedAt: Date;
 }
 
 export const AdSchema = SchemaFactory.createForClass(Ad);

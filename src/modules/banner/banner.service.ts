@@ -6,13 +6,14 @@ import { CreateBannerDto } from "./dto/create-banner.dto";
 import { FindBannerDto } from "./dto/find-banner.dto";
 import { UpdateBannerDto } from "./dto/update-banner.dto";
 import { Banner, BannerDocument } from "./entities/banner.entity";
-const selectFields = {
+export const BannerSelectFields = {
   _id: 1,
   type: 1,
   title: 1,
   description: 1,
-  url: 1,
-  updateAt: 1,
+  pictureUrl: 1,
+  gotoUrl: 1,
+  updatedAt: 1,
 };
 
 @Injectable()
@@ -25,13 +26,15 @@ export class BannerService {
     return res;
   }
 
-  async findAll(query: FindBannerDto): Promise<IPageResponse<BannerDocument>> {
+  async findAll(
+    query: FindBannerDto = {}
+  ): Promise<IPageResponse<BannerDocument>> {
     const { current, pageSize, type } = query;
-    const queryExpress = {};
+    const queryExpress = { ...(type ? { type } : {}) };
     const total = await this.bannerModel.countDocuments(queryExpress);
 
     const list = await this.bannerModel
-      .find({ type }, selectFields)
+      .find(queryExpress, BannerSelectFields)
       .limit(pageSize)
       .skip((current - 1) * pageSize);
     return {
@@ -45,7 +48,7 @@ export class BannerService {
   }
 
   async findOne(_id: string): Promise<BannerDocument> {
-    return this.bannerModel.findById(_id, selectFields);
+    return this.bannerModel.findById(_id, BannerSelectFields);
   }
 
   async update(

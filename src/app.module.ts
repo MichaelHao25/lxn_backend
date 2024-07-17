@@ -39,7 +39,6 @@ import { UserModule } from "./modules/user/user.module";
     UploadModule,
     TypeModule,
     ProductModule,
-    ProductAttachmentModule,
     NewsModule,
     BannerModule,
     LabelModule,

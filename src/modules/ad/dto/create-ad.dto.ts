@@ -5,6 +5,7 @@ import {
   IsOptional,
   isRgbColor,
   IsString,
+  IsUrl,
   Validate,
 } from "class-validator";
 import { IAdType } from "../interface";
@@ -19,21 +20,26 @@ export class CreateAdDto {
   /**
    * 标题
    */
+
   @IsString()
-  @IsNotEmpty()
   title: string;
   /**
    * 描述
    */
   @IsString()
-  @IsNotEmpty()
   description: string;
   /**
-   * url
+   * 图片地址
+   */
+  @IsNotEmpty()
+  @IsUrl()
+  pictureUrl: string;
+  /**
+   * 跳转地址
    */
   @IsString()
-  @IsNotEmpty()
-  url: string;
+  @IsUrl()
+  gotoUrl: string;
   /**
    * 背景颜色 只能是
    */
@@ -43,5 +49,5 @@ export class CreateAdDto {
     }
   })
   @IsOptional()
-  backgroundColor?: string;
+  backgroundColor: string;
 }

@@ -15,6 +15,11 @@ export type ProductDocument = HydratedDocument<Product>;
 })
 export class Product {
   /**
+   * 产品标题
+   */
+  @Prop({ required: true })
+  title: string;
+  /**
    * 类型id
    */
   @Prop({
@@ -31,15 +36,10 @@ export class Product {
   })
   label: Label[];
   /**
-   * 产品标题
-   */
-  @Prop({ required: true })
-  title: string;
-  /**
    * 产品主图
    */
   @Prop({ required: true })
-  mainPicture: string;
+  mainPictureUrl: string;
   /**
    * 产品描述
    */
@@ -49,17 +49,19 @@ export class Product {
    * 上线时间
    */
   @Prop({ required: true })
-  releaseDate: string;
+  releaseDate_start: string;
+  @Prop({ required: true })
+  releaseDate_end: string;
   /**
    * 总集数
    */
   @Prop({ required: true })
-  totalEpisodes: string;
+  totalEpisodes: number;
   /**
    * 时长
    */
   @Prop({ required: true })
-  duration: string;
+  duration: number;
   /**
    * 视频方向
    */
@@ -76,7 +78,7 @@ export class Product {
    * 授权信息 -- 首发平台
    */
   @Prop({ required: true })
-  authorizationInformation_firstLaunchPlatform: string;
+  authorizationInformation_firstLaunchPlatform: number;
 
   /**
    * 授权信息 -- 范围

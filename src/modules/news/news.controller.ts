@@ -75,14 +75,14 @@ export class NewsController {
           const res = await this.newsService.update(_id, updateNewsDto);
           return parseSuccessResponse({ data: res });
         } else {
-          return new HttpException("类型不正确", HttpStatus.FORBIDDEN);
+          throw new HttpException("类型不正确", HttpStatus.FORBIDDEN);
         }
       } else {
         const res = await this.newsService.update(_id, updateNewsDto);
         return parseSuccessResponse({ data: res });
       }
     } else {
-      return new HttpException("id不正确", HttpStatus.FORBIDDEN);
+      throw new HttpException("id不正确", HttpStatus.FORBIDDEN);
     }
   }
 

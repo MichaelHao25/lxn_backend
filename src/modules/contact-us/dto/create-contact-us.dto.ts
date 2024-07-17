@@ -1,4 +1,4 @@
-import { IsMobilePhone, IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsString } from "class-validator";
 
 export class CreateContactUsDto {
   @IsString()
@@ -6,11 +6,10 @@ export class CreateContactUsDto {
   origin: string;
   @IsString()
   @IsNotEmpty()
-  company: string;
+  companyName: string;
   @IsString()
   @IsNotEmpty()
   name: string;
-  @IsMobilePhone("zh-CN")
   @IsNotEmpty()
   tel: string;
   @IsString()

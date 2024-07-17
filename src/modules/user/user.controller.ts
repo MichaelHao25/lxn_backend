@@ -50,7 +50,7 @@ export class UserController {
       createUserDto.username
     );
     if (user) {
-      return new HttpException("用户已存在", HttpStatus.FORBIDDEN);
+      throw new HttpException("用户已存在", HttpStatus.FORBIDDEN);
     }
     await this.userService.create(createUserDto);
     return parseSuccessResponse({

@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { LabelService } from "../label/label.service";
+import { LabelSelectFields, LabelService } from "../label/label.service";
 import { TypeSelectFields, TypeService } from "../type/type.service";
 import { CreateNewsDto } from "./dto/create-news.dto";
 import { FindNewsDto } from "./dto/find-news.dto";
@@ -10,10 +10,12 @@ import { News, NewsDocument } from "./entities/news.entity";
 export const NewSelectFields = {
   title: 1,
   _id: 1,
-  mainPicture: 1,
-  typeId: 1,
+  mainPictureUrl: 1,
+  type: 1,
   updatedAt: 1,
   description: 1,
+  label: 1,
+  details: 1,
 };
 @Injectable()
 export class NewsService {
@@ -66,7 +68,8 @@ export class NewsService {
       .find(queryExpress, NewSelectFields)
       .limit(pageSize)
       .skip((current - 1) * pageSize)
-      .populate("type", TypeSelectFields);
+      .populate("type", TypeSelectFields)
+      .populate("label", LabelSelectFields);
 
     return {
       page: {
@@ -79,7 +82,10 @@ export class NewsService {
   }
 
   async findOne(_id: string): Promise<NewsDocument> {
-    return await this.newsModel.findById(_id);
+    return await this.newsModel
+      .findById(_id)
+      .populate("type", TypeSelectFields)
+      .populate("label", LabelSelectFields);
   }
 
   async update(

@@ -5,7 +5,7 @@ export type UploadDocument = HydratedDocument<Upload>;
 
 @Schema({
   timestamps: {
-    updatedAt: "updateAt",
+    updatedAt: "updatedAt",
   },
 })
 export class Upload {
@@ -33,7 +33,7 @@ export class Upload {
    * 更新时间
    */
   @Prop({ default: Date.now })
-  updateAt: Date;
+  updatedAt: Date;
 }
 
 export const UploadSchema = SchemaFactory.createForClass(Upload);

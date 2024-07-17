@@ -8,10 +8,10 @@ import {
   Post,
 } from "@nestjs/common";
 import { Public } from "src/common/decorators/public.decorator";
+import parseSuccessResponse from "src/common/parseSuccessResponse";
 import { AdService } from "../ad/ad.service";
-import { IAdType } from "../ad/interface";
 import { BannerService } from "../banner/banner.service";
-import { IBannerType } from "../banner/interface";
+import { LabelService } from "../label/label.service";
 import { NewsService } from "../news/news.service";
 import { ProductService } from "../product/product.service";
 import { CreatePageDto } from "./dto/create-page.dto";
@@ -25,81 +25,67 @@ export class PageController {
     private readonly bannerService: BannerService,
     private readonly adService: AdService,
     private readonly productService: ProductService,
-    private readonly newsService: NewsService
+    private readonly newsService: NewsService,
+    private readonly labelService: LabelService
   ) {}
 
   @Post()
   @Public()
-  create(@Body() createPageDto: CreatePageDto) {
-    return this.pageService.create(createPageDto);
+  async create(@Body() createPageDto: CreatePageDto) {
+    const res = await this.pageService.create(createPageDto);
+    return parseSuccessResponse({
+      data: res,
+    });
+  }
+  @Get()
+  async findConfig() {
+    const res = await this.pageService.findOne();
+    return parseSuccessResponse({
+      data: res,
+    });
   }
 
   @Get("/index")
   @Public()
   async findAll() {
-    const defaultList: unknown[] = [];
-    const banner1 = await this.bannerService.findAll({
-      type: IBannerType.Home_Banner_1,
+    const labelList = await this.findConfig();
+    const { data } = labelList;
+    if (data?.indexShowLabel === null) {
+      return parseSuccessResponse({
+        data: [],
+      });
+    }
+    const res = await Promise.all(
+      data?.indexShowLabel.map(async (label) => {
+        const product1 = await this.productService.findAll({
+          label: label.id,
+        });
+        return {
+          label: label,
+          list: product1.list,
+        };
+      })
+    );
+    return parseSuccessResponse({
+      data: res,
     });
-    const product1 = await this.productService.findAll({
-      label: "669203c5eb48cd88650e1556",
-    });
-    const banner2 = await this.bannerService.findAll({
-      type: IBannerType.Home_Banner_2,
-    });
-    const news1 = await this.newsService.findAll({
-      label: "669203cceb48cd88650e1558",
-    });
-
-    const ad1 = await this.adService.findAll({
-      type: IAdType.Home_Ad_1,
-    });
-    const ad2 = await this.adService.findAll({
-      type: IAdType.Home_Ad_2,
-    });
-    const product2 = await this.productService.findAll({
-      label: "669203ddeb48cd88650e155a",
-    });
-    const product3 = await this.productService.findAll({
-      label: "669203e5eb48cd88650e155c",
-    });
-    const product4 = await this.productService.findAll({
-      label: "669203feeb48cd88650e155f",
-    });
-    const product5 = await this.productService.findAll({
-      label: "66920405eb48cd88650e1561",
-    });
-    const product6 = await this.productService.findAll({
-      label: "6692040eeb48cd88650e1563",
-    });
-
-    defaultList.push(banner1);
-    defaultList.push(product1);
-    defaultList.push(news1);
-    defaultList.push(ad1);
-    defaultList.push(ad2);
-    defaultList.push(product2);
-    defaultList.push(product3);
-    defaultList.push(banner2);
-    defaultList.push(product4);
-    defaultList.push(product5);
-    defaultList.push(product6);
-
-    return defaultList;
   }
 
   @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.pageService.findOne(+id);
+  findOne(@Param("id") _id: string) {
+    return this.pageService.findOne();
   }
 
   @Patch(":id")
-  update(@Param("id") id: string, @Body() updatePageDto: UpdatePageDto) {
-    return this.pageService.update(+id, updatePageDto);
+  async update(@Param("id") _id: string, @Body() updatePageDto: UpdatePageDto) {
+    const res = await this.pageService.update(_id, updatePageDto);
+    return parseSuccessResponse({
+      data: res,
+    });
   }
 
   @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.pageService.remove(+id);
+  remove(@Param("id") _id: string) {
+    return this.pageService.remove(_id);
   }
 }

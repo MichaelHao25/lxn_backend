@@ -37,14 +37,7 @@ export class TypeController {
   @Get()
   @Public()
   async findAll(@Query() query: FindTypeDto): Promise<IResponseStructure> {
-    const { type } = query;
-    // if ([IProductOneLevelType.product].includes(type)) {
-    //   const res = await this.typeService.findAll({
-    //     type,
-    //   });
-    //   return parseSuccessResponse({ data: res });
-    // }
-    const res = await this.typeService.findAll({ type });
+    const res = await this.typeService.findAll(query);
     return parseSuccessResponse({ data: res });
   }
   /**

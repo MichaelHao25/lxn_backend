@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
+import { IPageResponse } from "src/interface";
 import { CreateTypeDto } from "./dto/create-type.dto";
 import { FindTypeDto } from "./dto/find-type.dto";
 import { UpdateTypeDto } from "./dto/update-type.dto";
@@ -10,59 +11,66 @@ export const TypeSelectFields = {
   _id: 1,
   title: 1,
   parent: 1,
+  updatedAt: 1,
 };
 @Injectable()
 export class TypeService {
   constructor(@InjectModel(Type.name) private typeModel: Model<Type>) {}
 
   async create(createTypeDto: CreateTypeDto): Promise<TypeDocument> {
-    const { parent } = createTypeDto;
+    const { parent, ...attr } = createTypeDto;
     if (parent) {
-      const res = await this.findOne(parent);
-      if (res) {
-        const type = new this.typeModel(createTypeDto);
+      const parentItem = await this.findOne(parent);
+      if (parentItem) {
+        const type = new this.typeModel(attr);
+        type.parent = parentItem;
         await type.save();
         return type;
       } else {
-        new HttpException("父级类型不存在", HttpStatus.BAD_REQUEST);
+        throw new HttpException("父级类型不存在", HttpStatus.BAD_REQUEST);
       }
     } else {
-      const type = new this.typeModel(createTypeDto);
+      const type = new this.typeModel(attr);
       await type.save();
       return type;
     }
   }
 
-  async findAll(
-    params: FindTypeDto = {}
-  ): Promise<{ _id: string; title: string }[]> {
-    const { type } = params;
-    if (type) {
-      return await this.typeModel
-        .find<{
-          _id: string;
-          title: string;
-        }>(
-          {
-            parent: type,
-          },
-          {
-            _id: 1,
-            title: 1,
+  async findAll(params: FindTypeDto = {}): Promise<IPageResponse> {
+    const { pageSize, current, parent, title } = params;
+    const queryExpress = {
+      ...(title
+        ? {
+            title: { $regex: title },
           }
-        )
-        .sort({ order: -1 });
-    }
+        : {}),
+      ...(parent ? { parent } : {}),
+    };
 
-    const list = await this.typeModel.find<{
-      _id: string;
-      title: string;
-    }>({}, TypeSelectFields);
-    return list;
+    const total = await this.typeModel.countDocuments(queryExpress);
+    const list = await this.typeModel
+      .find<{
+        _id: string;
+        title: string;
+      }>(queryExpress, TypeSelectFields)
+      .limit(pageSize)
+      .skip((current - 1) * pageSize)
+      .populate("parent", TypeSelectFields)
+      .sort({ updatedAt: -1 });
+    return {
+      page: {
+        total,
+        current,
+        pageSize,
+      },
+      list,
+    };
   }
 
   async findOne(_id: string): Promise<TypeDocument | null> {
-    const res = await this.typeModel.findById(_id, TypeSelectFields);
+    const res = await this.typeModel
+      .findById(_id, TypeSelectFields)
+      .populate("parent", TypeSelectFields);
     return res;
   }
   async findById(_idList: string[] = []): Promise<(TypeDocument | null)[]> {
@@ -88,7 +96,10 @@ export class TypeService {
               if (parentType) {
                 type.parent = parentType;
               } else {
-                new HttpException("父级类型不存在", HttpStatus.BAD_REQUEST);
+                throw new HttpException(
+                  "父级类型不存在",
+                  HttpStatus.BAD_REQUEST
+                );
               }
             }
           }
@@ -100,10 +111,18 @@ export class TypeService {
       await type.save();
       return type;
     }
-    new HttpException("id错误", HttpStatus.BAD_REQUEST);
+    throw new HttpException("id错误", HttpStatus.BAD_REQUEST);
   }
 
   async remove(_id: string) {
-    await this.typeModel.deleteOne({ _id });
+    const data = await this.findAll({ parent: _id });
+    if (data.list.length == 0) {
+      await this.typeModel.deleteOne({ _id });
+    } else {
+      throw new HttpException(
+        "请先删除类型下面的子类型",
+        HttpStatus.BAD_REQUEST
+      );
+    }
   }
 }

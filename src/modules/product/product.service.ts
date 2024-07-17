@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { LabelSelectFields, LabelService } from "../label/label.service";
@@ -13,9 +13,10 @@ const selectFields = {
   type: 1,
   label: 1,
   title: 1,
-  mainPicture: 1,
+  mainPictureUrl: 1,
   description: 1,
-  releaseDate: 1,
+  releaseDate_start: 1,
+  releaseDate_end: 1,
   totalEpisodes: 1,
   duration: 1,
   videoDirection: 1,
@@ -24,7 +25,7 @@ const selectFields = {
   authorizationInformation_scope: 1,
   authorizationInformation_monetizationMethods: 1,
   pilotVideoAddress: 1,
-  updateAt: 1,
+  updatedAt: 1,
 };
 @Injectable()
 export class ProductService {
@@ -79,7 +80,10 @@ export class ProductService {
   }
 
   async findOne(_id: string): Promise<ProductDocument> {
-    return await this.productModel.findById(_id, selectFields);
+    return await this.productModel
+      .findById(_id, selectFields)
+      .populate("type", TypeSelectFields)
+      .populate("label", LabelSelectFields);
   }
 
   async update(
@@ -87,24 +91,26 @@ export class ProductService {
     updateProductDto: UpdateProductDto
   ): Promise<ProductDocument> {
     const product = await this.productModel.findById(_id);
-    const { type, title, mainPicture, description, order } = updateProductDto;
-
+    const { type, label, ...attr } = updateProductDto;
     if (type) {
       const typeItem = await this.typeService.findById(type);
-      product.type = typeItem;
+      if (typeItem) {
+        product.type = typeItem;
+      } else {
+        throw new HttpException("类型不存在", HttpStatus.NOT_ACCEPTABLE);
+      }
     }
-    if (title) {
-      product.title = title;
+    if (label) {
+      const labelList = await this.labelService.findById(label);
+      if (labelList.every((item) => item !== null)) {
+        product.label = labelList;
+      } else {
+        throw new HttpException("标签不存在", HttpStatus.NOT_ACCEPTABLE);
+      }
     }
-    if (mainPicture) {
-      product.mainPicture = mainPicture;
-    }
-    if (description) {
-      product.description = description;
-    }
-    if (order) {
-      product.order = order;
-    }
+    Object.entries(attr).forEach(([key, value]) => {
+      product[key] = value;
+    });
     await product.save();
     return product;
   }

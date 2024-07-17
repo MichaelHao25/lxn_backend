@@ -32,7 +32,7 @@ export class News {
    * 产品主图
    */
   @Prop({ required: true })
-  mainPicture: string;
+  mainPictureUrl: string;
   /**
    * 产品描述
    */

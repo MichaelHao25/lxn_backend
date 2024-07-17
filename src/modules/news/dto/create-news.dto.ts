@@ -18,7 +18,7 @@ export class CreateNewsDto {
    * 产品主图
    */
   @IsUrl()
-  mainPicture: string;
+  mainPictureUrl: string;
   /**
    * 产品描述
    */

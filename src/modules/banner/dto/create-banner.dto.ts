@@ -21,5 +21,7 @@ export class CreateBannerDto {
   @IsOptional()
   description?: string;
   @IsUrl()
-  url: string;
+  pictureUrl: string;
+  @IsUrl()
+  gotoUrl: string;
 }

@@ -25,22 +25,31 @@ export class BannerController {
   }
 
   @Get()
-  findAll(@Query() query: FindBannerDto) {
-    return this.bannerService.findAll(query);
+  async findAll(@Query() query: FindBannerDto) {
+    const res = await this.bannerService.findAll(query);
+    return parseSuccessResponse({ data: res });
   }
 
   @Get(":_id")
-  findOne(@Param("_id") _id: string) {
-    return this.bannerService.findOne(_id);
+  async findOne(@Param("_id") _id: string) {
+    const res = await this.bannerService.findOne(_id);
+    return parseSuccessResponse({ data: res });
   }
 
   @Patch(":_id")
-  update(@Param("_id") _id: string, @Body() updateBannerDto: UpdateBannerDto) {
-    return this.bannerService.update(_id, updateBannerDto);
+  async update(
+    @Param("_id") _id: string,
+    @Body() updateBannerDto: UpdateBannerDto
+  ) {
+    const res = await this.bannerService.update(_id, updateBannerDto);
+    return parseSuccessResponse({ data: res });
   }
 
   @Delete(":_id")
-  remove(@Param("_id") _id: string) {
-    return this.bannerService.remove(_id);
+  async remove(@Param("_id") _id: string) {
+    await this.bannerService.remove(_id);
+    return parseSuccessResponse({
+      data: "删除成功",
+    });
   }
 }

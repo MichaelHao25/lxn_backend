@@ -3,7 +3,7 @@ import { Injectable } from "@nestjs/common";
 // import { Repository } from 'typeorm';
 import { SavedMultipartFile } from "@fastify/multipart";
 import { InjectModel } from "@nestjs/mongoose";
-import OSS from "ali-oss";
+import * as OSS from "ali-oss";
 import { Model } from "mongoose";
 import * as crypto from "node:crypto";
 import * as fs from "node:fs";
@@ -170,6 +170,7 @@ export class UploadService {
    */
   async uploadOss(files: SavedMultipartFile[]): Promise<IUpdateFile[]> {
     const client = new OSS(OssConfig);
+
     /**
      * oss-----
      */

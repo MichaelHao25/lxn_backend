@@ -1,5 +1,4 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { IsNotEmpty, IsOptional, IsString, IsUrl } from "class-validator";
 import { HydratedDocument } from "mongoose";
 import { IBannerType } from "../interface";
 
@@ -16,33 +15,34 @@ class BannerItem {
 
 @Schema({
   timestamps: {
-    updatedAt: "updateAt",
+    updatedAt: "updatedAt",
   },
 })
 export class Banner {
   /**
    * 类型
    */
-  @IsString()
-  @IsNotEmpty()
+
   @Prop({ required: true })
   type: IBannerType;
-  @IsString()
-  @IsOptional()
-  @Prop({ required: true })
+
+  @Prop({ required: false })
   title?: string;
-  @IsString()
-  @IsOptional()
-  @Prop({ required: true })
+
+  @Prop({ required: false })
   description?: string;
-  @IsUrl()
+
   @Prop({ required: true })
-  url: string;
+  pictureUrl: string;
+
+  @Prop({ required: true })
+  gotoUrl: string;
+
   /**
    * 更新时间
    */
   @Prop({ default: Date.now })
-  updateAt: Date;
+  updatedAt: Date;
 }
 
 export const BannerSchema = SchemaFactory.createForClass(Banner);

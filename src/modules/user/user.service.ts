@@ -38,7 +38,7 @@ export class UserService {
           username: 1,
           isAdmin: 1,
           isDisable: 1,
-          updateAt: 1,
+          updatedAt: 1,
         }
       )
       .exec();
@@ -58,7 +58,7 @@ export class UserService {
       //     username: 1,
       //     isAdmin: 1,
       //     isDisable: 1,
-      //     updateAt: 1,
+      //     updatedAt: 1,
       //   }
     );
     return user;

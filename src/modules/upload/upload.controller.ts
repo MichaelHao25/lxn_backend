@@ -48,7 +48,7 @@ export class UploadController {
       );
       res.send(fs.createReadStream(file.fileLocation));
     }
-    return new HttpException("文件不存在", HttpStatus.NOT_FOUND);
+    throw new HttpException("文件不存在", HttpStatus.NOT_FOUND);
   }
   /**
    * 上传文件

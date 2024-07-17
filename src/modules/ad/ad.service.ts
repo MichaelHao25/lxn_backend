@@ -12,8 +12,10 @@ const AdSelectFields = {
   type: 1,
   title: 1,
   description: 1,
-  url: 1,
-  updateAt: 1,
+  pictureUrl: 1,
+  gotoUrl: 1,
+  updatedAt: 1,
+  backgroundColor: 1,
 };
 @Injectable()
 export class AdService {
@@ -27,7 +29,7 @@ export class AdService {
 
   async findAll(query: FindAdDto): Promise<IPageResponse<AdDocument>> {
     const { pageSize, current, type } = query;
-    const queryExpress = { type };
+    const queryExpress = { ...(type ? { type } : {}) };
     const total = await this.adModel.countDocuments(queryExpress);
     const list = await this.adModel
       .find(queryExpress, AdSelectFields)

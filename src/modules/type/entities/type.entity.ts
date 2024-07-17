@@ -21,11 +21,10 @@ export class Type {
    */
   @Prop({
     required: false,
-    default: "",
     type: mongoose.Schema.Types.ObjectId,
     ref: "Type",
   })
-  parent?: Type;
+  parent?: TypeDocument;
   /**
    * 顺序(越大越靠前)
    */
@@ -37,5 +36,4 @@ export class Type {
   @Prop({ default: Date.now })
   updatedAt: Date;
 }
-
 export const TypeSchema = SchemaFactory.createForClass(Type);
