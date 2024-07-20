@@ -14,7 +14,6 @@ import { ContactUsModule } from "./modules/contact-us/contact-us.module";
 import { LabelModule } from "./modules/label/label.module";
 import { NewsModule } from "./modules/news/news.module";
 import { PageModule } from "./modules/page/page.module";
-import { ProductAttachmentModule } from "./modules/product-attachment/product-attachment.module";
 import { ProductModule } from "./modules/product/product.module";
 import { TypeModule } from "./modules/type/type.module";
 import { UploadModule } from "./modules/upload/upload.module";

@@ -68,6 +68,7 @@ export class NewsService {
       .find(queryExpress, NewSelectFields)
       .limit(pageSize)
       .skip((current - 1) * pageSize)
+      .sort({ updatedAt: -1 })
       .populate("type", TypeSelectFields)
       .populate("label", LabelSelectFields);
 

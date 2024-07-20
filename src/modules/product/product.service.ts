@@ -51,7 +51,16 @@ export class ProductService {
   }
 
   async findAll(query: FindProductDto) {
-    const { current, pageSize, type, title, label } = query;
+    const {
+      current,
+      pageSize,
+      type,
+      title,
+      label,
+      releaseDate,
+      authorizationInformation_property,
+      authorizationInformation_scope,
+    } = query;
     const queryExpress = {
       ...(type ? { type } : {}),
       ...(label ? { label } : {}),
@@ -60,13 +69,43 @@ export class ProductService {
             title: { $regex: title },
           }
         : {}),
+      ...(releaseDate
+        ? {
+            /**
+             * 大于
+             */
+            releaseDate_start: {
+              $lte: releaseDate,
+            },
+            /**
+             * 小于
+             */
+            releaseDate_end: {
+              $gte: releaseDate,
+            },
+          }
+        : {}),
+      ...(authorizationInformation_scope
+        ? { authorizationInformation_scope }
+        : {}),
+      ...(authorizationInformation_property
+        ? { authorizationInformation_property }
+        : {}),
     };
     const total = await this.productModel.countDocuments(queryExpress);
     const res = await this.productModel
-      .find(queryExpress, selectFields)
+      .find(
+        queryExpress,
+        // {
+        //   releaseDate_start: {
+        //     $gte: new Date("2024-07-10"),
+        //   },
+        // },
+        selectFields
+      )
       .limit(pageSize)
       .skip((current - 1) * pageSize)
-      .sort({ order: -1 })
+      .sort({ updatedAt: -1 })
       .populate("type", TypeSelectFields)
       .populate("label", LabelSelectFields);
     return {

@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 import { LabelModule } from "../label/label.module";
+import { TypeModule } from "../type/type.module";
 import { AdModule } from "./../ad/ad.module";
 import { BannerModule } from "./../banner/banner.module";
 import { NewsModule } from "./../news/news.module";
@@ -18,6 +19,7 @@ import { PageService } from "./page.service";
     ProductModule,
     NewsModule,
     LabelModule,
+    TypeModule,
   ],
   controllers: [PageController],
   providers: [PageService],

@@ -48,24 +48,24 @@ export class Product {
   /**
    * 上线时间
    */
-  @Prop({ required: true })
-  releaseDate_start: string;
-  @Prop({ required: true })
-  releaseDate_end: string;
+  @Prop({ required: true, type: Date })
+  releaseDate_start: Date;
+  @Prop({ required: true, type: Date })
+  releaseDate_end: Date;
   /**
    * 总集数
    */
-  @Prop({ required: true })
+  @Prop({ required: false })
   totalEpisodes: number;
   /**
    * 时长
    */
-  @Prop({ required: true })
+  @Prop({ required: false })
   duration: number;
   /**
    * 视频方向
    */
-  @Prop({ required: true })
+  @Prop({ required: false })
   videoDirection: string;
 
   /**

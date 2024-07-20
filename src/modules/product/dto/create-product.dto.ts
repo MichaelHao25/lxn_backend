@@ -1,5 +1,7 @@
+import { Type } from "class-transformer";
 import {
   IsArray,
+  IsDate,
   IsEnum,
   IsNumber,
   IsOptional,
@@ -41,28 +43,33 @@ export class CreateProductDto {
   /**
    * 上线时间
    */
-  @IsString()
-  releaseDate_start: string;
+  @IsDate()
+  @Type(() => Date)
+  releaseDate_start: Date;
   /**
    * 上线时间
    */
-  @IsString()
-  releaseDate_end: string;
+  @IsDate()
+  @Type(() => Date)
+  releaseDate_end: Date;
   /**
    * 总集数
    */
   @IsNumber()
-  totalEpisodes: number;
+  @IsOptional()
+  totalEpisodes?: number;
   /**
    * 时长
    */
   @IsNumber()
-  duration: number;
+  @IsOptional()
+  duration?: number;
   /**
    * 视频方向
    */
   @IsString()
-  videoDirection: string;
+  @IsOptional()
+  videoDirection?: string;
   /**
    * 授权信息 - 授权性质
    */

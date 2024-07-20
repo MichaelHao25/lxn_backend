@@ -48,20 +48,20 @@ export class PageController {
   @Get("/index")
   @Public()
   async findAll() {
-    const labelList = await this.findConfig();
-    const { data } = labelList;
-    if (data?.indexShowLabel === null) {
+    const typeList = await this.findConfig();
+    const { data } = typeList;
+    if (data?.indexShowType === null) {
       return parseSuccessResponse({
         data: [],
       });
     }
     const res = await Promise.all(
-      data?.indexShowLabel.map(async (label) => {
+      data?.indexShowType.map(async (type) => {
         const product1 = await this.productService.findAll({
-          label: label.id,
+          type: type.id,
         });
         return {
-          label: label,
+          type: type,
           list: product1.list,
         };
       })

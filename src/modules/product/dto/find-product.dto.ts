@@ -1,5 +1,10 @@
-import { IsOptional, IsString } from "class-validator";
+import { Type } from "class-transformer";
+import { IsDate, IsEnum, IsOptional, IsString } from "class-validator";
 import { PageConfig } from "src/dto/index.dto";
+import {
+  IAuthorizationInformation_property,
+  IAuthorizationInformation_scope,
+} from "../interface";
 
 export class FindProductDto extends PageConfig {
   /**
@@ -20,4 +25,23 @@ export class FindProductDto extends PageConfig {
   @IsOptional()
   @IsString()
   label?: string;
+  /**
+   * 上线时间
+   */
+  @IsDate()
+  @IsOptional()
+  @Type(() => Date)
+  releaseDate?: Date;
+  /**
+   * 授权性质
+   */
+  @IsEnum(IAuthorizationInformation_property)
+  @IsOptional()
+  authorizationInformation_property?: IAuthorizationInformation_property;
+  /**
+   * 授权范围
+   */
+  @IsEnum(IAuthorizationInformation_scope)
+  @IsOptional()
+  authorizationInformation_scope?: IAuthorizationInformation_scope;
 }

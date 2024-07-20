@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose, { HydratedDocument } from "mongoose";
-import { LabelDocument } from "src/modules/label/entities/label.entity";
+import { TypeDocument } from "src/modules/type/entities/type.entity";
 
 export type PageDocument = HydratedDocument<Page>;
 /**
@@ -17,9 +17,9 @@ export class Page {
    */
   @Prop({
     required: true,
-    type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Label" }],
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Type" }],
   })
-  indexShowLabel: LabelDocument[];
+  indexShowType: TypeDocument[];
   /**
    * 更新时间
    */
