@@ -36,6 +36,7 @@ export class BannerService {
     const list = await this.bannerModel
       .find(queryExpress, BannerSelectFields)
       .limit(pageSize)
+      .sort({ updatedAt: -1 })
       .skip((current - 1) * pageSize);
     return {
       page: {

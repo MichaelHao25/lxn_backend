@@ -62,6 +62,7 @@ export class ContactUsService {
     const list = await this.contactUsModel
       .find(queryExpress, selectFields)
       .limit(pageSize)
+      .sort({ updatedAt: -1 })
       .skip(pageSize * (current - 1));
     return {
       page: {

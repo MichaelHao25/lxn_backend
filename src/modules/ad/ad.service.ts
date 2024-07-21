@@ -34,6 +34,7 @@ export class AdService {
     const list = await this.adModel
       .find(queryExpress, AdSelectFields)
       .limit(pageSize)
+      .sort({ updatedAt: -1 })
       .skip((current - 1) * pageSize);
     return {
       page: {
