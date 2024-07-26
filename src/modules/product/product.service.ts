@@ -1,38 +1,29 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import {
+  forwardRef,
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+} from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { LabelSelectFields, LabelService } from "../label/label.service";
-import { TypeSelectFields, TypeService } from "../type/type.service";
+import { LabelService } from "../label/label.service";
+import { IGlobalConfig } from "../page/interface";
+import { PageService } from "../page/page.service";
+import { TypeService } from "../type/type.service";
 import { CreateProductDto } from "./dto/create-product.dto";
 import { FindProductDto } from "./dto/find-product.dto";
 import { UpdateProductDto } from "./dto/update-product.dto";
 import { Product, ProductDocument } from "./entities/product.entity";
 
-const selectFields = {
-  _id: 1,
-  type: 1,
-  label: 1,
-  title: 1,
-  mainPictureUrl: 1,
-  description: 1,
-  releaseDate_start: 1,
-  releaseDate_end: 1,
-  totalEpisodes: 1,
-  duration: 1,
-  videoDirection: 1,
-  authorizationInformation_property: 1,
-  authorizationInformation_firstLaunchPlatform: 1,
-  authorizationInformation_scope: 1,
-  authorizationInformation_monetizationMethods: 1,
-  pilotVideoAddress: 1,
-  updatedAt: 1,
-};
 @Injectable()
 export class ProductService {
   constructor(
     @InjectModel(Product.name) private productModel: Model<Product>,
     private readonly typeService: TypeService,
-    private readonly labelService: LabelService
+    private readonly labelService: LabelService,
+    @Inject(forwardRef(() => PageService))
+    private readonly pageService: PageService
   ) {}
   /**
    * 创建一个新的产品
@@ -62,8 +53,8 @@ export class ProductService {
       authorizationInformation_scope,
     } = query;
     const queryExpress = {
-      ...(type ? { type } : {}),
-      ...(label ? { label } : {}),
+      ...(type ? { type: { $all: type } } : {}),
+      ...(label ? { label: { $all: label } } : {}),
       ...(title
         ? {
             title: { $regex: title },
@@ -95,34 +86,53 @@ export class ProductService {
     const total = await this.productModel.countDocuments(queryExpress);
     const res = await this.productModel
       .find(
-        queryExpress,
+        queryExpress
         // {
         //   releaseDate_start: {
         //     $gte: new Date("2024-07-10"),
         //   },
         // },
-        selectFields
       )
       .limit(pageSize)
       .skip((current - 1) * pageSize)
-      .sort({ updatedAt: -1 })
-      .populate("type", TypeSelectFields)
-      .populate("label", LabelSelectFields);
+      .sort({ order: -1 })
+      .populate("type")
+      .populate("label");
+    const defaultProductImage = await this.pageService.findConfig({
+      type: IGlobalConfig.defaultProductImgConfig,
+    });
+    const parseList = res.map((item) => {
+      if (item.mainPictureUrl === undefined) {
+        if (defaultProductImage.defaultProductImage) {
+          item.mainPictureUrl = defaultProductImage.defaultProductImage;
+        }
+      }
+      return item;
+    });
     return {
       page: {
         total,
         current,
         pageSize,
       },
-      list: res,
+      list: parseList,
     };
   }
 
   async findOne(_id: string): Promise<ProductDocument> {
-    return await this.productModel
-      .findById(_id, selectFields)
-      .populate("type", TypeSelectFields)
-      .populate("label", LabelSelectFields);
+    const res = await this.pageService.findConfig({
+      type: IGlobalConfig.defaultProductImgConfig,
+    });
+    const item = await this.productModel
+      .findById(_id)
+      .populate("type")
+      .populate("label");
+    if (item.mainPictureUrl === undefined) {
+      if (res.defaultProductImage) {
+        item.mainPictureUrl = res.defaultProductImage;
+      }
+    }
+    return item;
   }
 
   async update(

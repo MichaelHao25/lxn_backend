@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose, { HydratedDocument } from "mongoose";
 import { TypeDocument } from "src/modules/type/entities/type.entity";
+import { IGlobalConfig } from "../interface";
 
 export type PageDocument = HydratedDocument<Page>;
 /**
@@ -12,14 +13,25 @@ export type PageDocument = HydratedDocument<Page>;
   },
 })
 export class Page {
+  @Prop()
+  type?: IGlobalConfig;
   /**
    * 首页数据的顺序
    */
   @Prop({
-    required: true,
     type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Type" }],
   })
-  indexShowType: TypeDocument[];
+  indexShowType?: TypeDocument[];
+  /**
+   * 默认的产品信息图片
+   */
+  @Prop()
+  defaultProductImage?: string;
+  /**
+   * 默认的新闻信息图片
+   */
+  @Prop()
+  defaultNewImage?: string;
   /**
    * 更新时间
    */

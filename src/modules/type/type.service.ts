@@ -7,12 +7,6 @@ import { FindTypeDto } from "./dto/find-type.dto";
 import { UpdateTypeDto } from "./dto/update-type.dto";
 import { Type, TypeDocument } from "./entities/type.entity";
 
-export const TypeSelectFields = {
-  _id: 1,
-  title: 1,
-  parent: 1,
-  updatedAt: 1,
-};
 @Injectable()
 export class TypeService {
   constructor(@InjectModel(Type.name) private typeModel: Model<Type>) {}
@@ -52,11 +46,11 @@ export class TypeService {
       .find<{
         _id: string;
         title: string;
-      }>(queryExpress, TypeSelectFields)
+      }>(queryExpress)
       .limit(pageSize)
       .skip((current - 1) * pageSize)
-      .populate("parent", TypeSelectFields)
-      .sort({ updatedAt: -1 });
+      .populate("parent")
+      .sort({ order: -1 });
     return {
       page: {
         total,
@@ -68,9 +62,7 @@ export class TypeService {
   }
 
   async findOne(_id: string): Promise<TypeDocument | null> {
-    const res = await this.typeModel
-      .findById(_id, TypeSelectFields)
-      .populate("parent", TypeSelectFields);
+    const res = await this.typeModel.findById(_id).populate("parent");
     return res;
   }
   async findById(_idList: string[] = []): Promise<(TypeDocument | null)[]> {
@@ -89,25 +81,20 @@ export class TypeService {
       await Promise.all(
         Object.entries(updateTypeDto).map(async ([key, value]) => {
           if (key === "parent") {
-            if (value === "") {
-              type.parent = undefined;
+            const parentType = await this.findOne(value);
+            if (parentType) {
+              type.parent = parentType;
             } else {
-              const parentType = await this.findOne(value);
-              if (parentType) {
-                type.parent = parentType;
-              } else {
-                throw new HttpException(
-                  "父级类型不存在",
-                  HttpStatus.BAD_REQUEST
-                );
-              }
+              throw new HttpException("父级类型不存在", HttpStatus.BAD_REQUEST);
             }
-          }
-          if (key === "title") {
+          } else {
             type[key] = value;
           }
         })
       );
+      if (updateTypeDto.parent === undefined) {
+        type.parent = undefined;
+      }
       await type.save();
       return type;
     }

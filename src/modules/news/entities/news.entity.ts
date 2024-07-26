@@ -19,7 +19,7 @@ export class News {
    * 产品标签
    */
   @Prop({
-    required: true,
+    required: false,
     type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Label" }],
   })
   label: Label[];
@@ -31,18 +31,20 @@ export class News {
   /**
    * 产品主图
    */
-  @Prop({ required: true })
+  @Prop({ required: false })
   mainPictureUrl: string;
   /**
    * 产品描述
    */
-  @Prop({ required: true })
+  @Prop({ required: false })
   description: string;
   /**
    * 产品详情
    */
-  @Prop({ required: true })
+  @Prop({ required: false })
   details: string;
+  @Prop()
+  order?: number;
   /**
    * 更新时间
    */

@@ -7,11 +7,6 @@ import { FindLabelDto } from "./dto/find-label.dto";
 import { UpdateLabelDto } from "./dto/update-label.dto";
 import { Label, LabelDocument } from "./entities/label.entity";
 
-export const LabelSelectFields = {
-  _id: 1,
-  title: 1,
-  updatedAt: 1,
-};
 @Injectable()
 export class LabelService {
   constructor(@InjectModel(Label.name) private labelModel: Model<Label>) {}
@@ -38,10 +33,10 @@ export class LabelService {
       .find<{
         _id: string;
         title: string;
-      }>(queryExpress, LabelSelectFields)
+      }>(queryExpress)
       .limit(pageSize)
       .skip((current - 1) * pageSize)
-      .sort({ updatedAt: -1 });
+      .sort({ order: -1 });
     return {
       page: {
         total,
@@ -53,7 +48,7 @@ export class LabelService {
   }
 
   async findOne(_id: string): Promise<LabelDocument> {
-    return await this.labelModel.findById(_id, LabelSelectFields);
+    return await this.labelModel.findById(_id);
   }
   async findById(_idList: string[] = []): Promise<(LabelDocument | null)[]> {
     const list = await Promise.all(

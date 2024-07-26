@@ -2,31 +2,27 @@ import {
   Body,
   Controller,
   Delete,
+  forwardRef,
   Get,
+  Inject,
   Param,
   Patch,
   Post,
 } from "@nestjs/common";
 import { Public } from "src/common/decorators/public.decorator";
 import parseSuccessResponse from "src/common/parseSuccessResponse";
-import { AdService } from "../ad/ad.service";
-import { BannerService } from "../banner/banner.service";
-import { LabelService } from "../label/label.service";
-import { NewsService } from "../news/news.service";
 import { ProductService } from "../product/product.service";
 import { CreatePageDto } from "./dto/create-page.dto";
 import { UpdatePageDto } from "./dto/update-page.dto";
+import { IGlobalConfig } from "./interface";
 import { PageService } from "./page.service";
 
 @Controller("page")
 export class PageController {
   constructor(
     private readonly pageService: PageService,
-    private readonly bannerService: BannerService,
-    private readonly adService: AdService,
-    private readonly productService: ProductService,
-    private readonly newsService: NewsService,
-    private readonly labelService: LabelService
+    @Inject(forwardRef(() => ProductService))
+    private readonly productService: ProductService
   ) {}
 
   @Post()
@@ -37,26 +33,19 @@ export class PageController {
       data: res,
     });
   }
-  @Get()
-  async findConfig() {
-    const res = await this.pageService.findOne();
-    return parseSuccessResponse({
-      data: res,
-    });
-  }
-
   @Get("/index")
   @Public()
   async findAll() {
-    const typeList = await this.findConfig();
-    const { data } = typeList;
-    if (data?.indexShowType === null) {
+    const typeList = await this.pageService.findConfig({
+      type: IGlobalConfig.indexSortConfig,
+    });
+    if (typeList?.indexShowType === null) {
       return parseSuccessResponse({
         data: [],
       });
     }
     const res = await Promise.all(
-      data?.indexShowType.map(async (type) => {
+      typeList?.indexShowType.map(async (type) => {
         const product1 = await this.productService.findAll({
           type: type.id,
         });
@@ -70,15 +59,20 @@ export class PageController {
       data: res,
     });
   }
-
-  @Get(":id")
-  findOne(@Param("id") _id: string) {
-    return this.pageService.findOne();
+  @Get(":type")
+  async findOne(@Param("type") type: IGlobalConfig) {
+    const res = await this.pageService.findConfig({ type });
+    return parseSuccessResponse({
+      data: res,
+    });
   }
 
-  @Patch(":id")
-  async update(@Param("id") _id: string, @Body() updatePageDto: UpdatePageDto) {
-    const res = await this.pageService.update(_id, updatePageDto);
+  @Patch(":type")
+  async update(
+    @Param("type") type: IGlobalConfig,
+    @Body() updatePageDto: UpdatePageDto
+  ) {
+    const res = await this.pageService.update(type, updatePageDto);
     return parseSuccessResponse({
       data: res,
     });

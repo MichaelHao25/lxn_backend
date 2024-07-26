@@ -1,28 +1,22 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { LabelSelectFields, LabelService } from "../label/label.service";
-import { TypeSelectFields, TypeService } from "../type/type.service";
+import { LabelService } from "../label/label.service";
+import { PageService } from "../page/page.service";
+import { TypeService } from "../type/type.service";
+import { IGlobalConfig } from "./../page/interface";
 import { CreateNewsDto } from "./dto/create-news.dto";
 import { FindNewsDto } from "./dto/find-news.dto";
 import { UpdateNewsDto } from "./dto/update-news.dto";
 import { News, NewsDocument } from "./entities/news.entity";
-export const NewSelectFields = {
-  title: 1,
-  _id: 1,
-  mainPictureUrl: 1,
-  type: 1,
-  updatedAt: 1,
-  description: 1,
-  label: 1,
-  details: 1,
-};
+
 @Injectable()
 export class NewsService {
   constructor(
     @InjectModel(News.name) private newsModel: Model<News>,
     private readonly typeService: TypeService,
-    private readonly labelService: LabelService
+    private readonly labelService: LabelService,
+    private readonly pageService: PageService
   ) {}
   /**
    * 创建一个新的产品
@@ -65,28 +59,47 @@ export class NewsService {
     };
     const total = await this.newsModel.countDocuments(queryExpress);
     const list = await this.newsModel
-      .find(queryExpress, NewSelectFields)
+      .find(queryExpress)
       .limit(pageSize)
       .skip((current - 1) * pageSize)
-      .sort({ updatedAt: -1 })
-      .populate("type", TypeSelectFields)
-      .populate("label", LabelSelectFields);
-
+      .sort({ order: -1 })
+      .populate("type")
+      .populate("label");
+    const res = await this.pageService.findConfig({
+      type: IGlobalConfig.defaultNewImgConfig,
+    });
+    const parseList = list.map((item) => {
+      if (item.mainPictureUrl === undefined) {
+        if (res.defaultNewImage) {
+          item.mainPictureUrl = res.defaultNewImage;
+        }
+      }
+      return item;
+    });
     return {
       page: {
         total,
         current,
         pageSize,
       },
-      list,
+      list: parseList,
     };
   }
 
   async findOne(_id: string): Promise<NewsDocument> {
-    return await this.newsModel
+    const res = await this.pageService.findConfig({
+      type: IGlobalConfig.defaultNewImgConfig,
+    });
+    const item = await this.newsModel
       .findById(_id)
-      .populate("type", TypeSelectFields)
-      .populate("label", LabelSelectFields);
+      .populate("type")
+      .populate("label");
+    if (item.mainPictureUrl === undefined) {
+      if (res.defaultNewImage) {
+        item.mainPictureUrl = res.defaultNewImage;
+      }
+    }
+    return item;
   }
 
   async update(

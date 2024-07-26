@@ -11,8 +11,7 @@ export class FindProductDto extends PageConfig {
    * 类型id
    */
   @IsOptional()
-  @IsString()
-  type?: string;
+  type?: string[] | string;
   /**
    * 产品标题
    */
@@ -23,8 +22,7 @@ export class FindProductDto extends PageConfig {
    * 标签id
    */
   @IsOptional()
-  @IsString()
-  label?: string;
+  label?: string[] | string;
   /**
    * 上线时间
    */
@@ -44,4 +42,10 @@ export class FindProductDto extends PageConfig {
   @IsEnum(IAuthorizationInformation_scope)
   @IsOptional()
   authorizationInformation_scope?: IAuthorizationInformation_scope;
+  /**
+   * 顺序(越大越靠前)
+   */
+  @IsOptional()
+  @Type(() => Number)
+  order?: number;
 }

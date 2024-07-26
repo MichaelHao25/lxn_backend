@@ -7,16 +7,6 @@ import { FindAdDto } from "./dto/find-ad.dto";
 import { UpdateAdDto } from "./dto/update-ad.dto";
 import { Ad, AdDocument } from "./entities/ad.entity";
 
-const AdSelectFields = {
-  _id: 1,
-  type: 1,
-  title: 1,
-  description: 1,
-  pictureUrl: 1,
-  gotoUrl: 1,
-  updatedAt: 1,
-  backgroundColor: 1,
-};
 @Injectable()
 export class AdService {
   constructor(@InjectModel(Ad.name) private adModel: Model<Ad>) {}
@@ -32,9 +22,9 @@ export class AdService {
     const queryExpress = { ...(type ? { type } : {}) };
     const total = await this.adModel.countDocuments(queryExpress);
     const list = await this.adModel
-      .find(queryExpress, AdSelectFields)
+      .find(queryExpress)
       .limit(pageSize)
-      .sort({ updatedAt: -1 })
+      .sort({ order: -1 })
       .skip((current - 1) * pageSize);
     return {
       page: {
@@ -47,7 +37,7 @@ export class AdService {
   }
 
   async findOne(_id: string): Promise<AdDocument> {
-    return await this.adModel.findById({ _id }, AdSelectFields);
+    return await this.adModel.findById({ _id });
   }
 
   async update(_id: string, updateAdDto: UpdateAdDto) {

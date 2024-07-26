@@ -1,3 +1,4 @@
+import { Type } from "class-transformer";
 import {
   IsEnum,
   IsNotEmpty,
@@ -24,4 +25,10 @@ export class CreateBannerDto {
   pictureUrl: string;
   @IsUrl()
   gotoUrl: string;
+  /**
+   * 顺序(越大越靠前)
+   */
+  @IsOptional()
+  @Type(() => Number)
+  order?: number;
 }

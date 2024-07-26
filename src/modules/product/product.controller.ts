@@ -76,16 +76,16 @@ export class ProductController {
     @Param("_id") _id: string,
     @Body() updateProductDto: UpdateProductDto
   ) {
-    const { type, label } = updateProductDto;
+    const { type = [], label = [] } = updateProductDto;
     const product = await this.productService.findOne(_id);
     if (product) {
-      if (label) {
+      if (label.length !== 0) {
         const labelList = await this.labelService.findById(label);
         if (labelList.every((item) => item === null)) {
           return new HttpException("类型不正确", HttpStatus.FORBIDDEN);
         }
       }
-      if (type) {
+      if (type.length !== 0) {
         const typeList = await this.typeService.findById(type);
         if (typeList.every((item) => item === null)) {
           return new HttpException("类型不正确", HttpStatus.FORBIDDEN);

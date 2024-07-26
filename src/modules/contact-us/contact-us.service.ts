@@ -7,17 +7,6 @@ import { FindContactUsDto } from "./dto/find-contact-us.dto";
 import { UpdateContactUsDto } from "./dto/update-contact-us.dto";
 import { ContactUs, ContactUsDocument } from "./entities/contact-us.entity";
 
-const selectFields = {
-  _id: 1,
-  origin: 1,
-  companyName: 1,
-  name: 1,
-  tel: 1,
-  appendAttributes: 1,
-  understandType: 1,
-  scopeOfAuthority: 1,
-  updatedAt: 1,
-};
 @Injectable()
 export class ContactUsService {
   constructor(
@@ -60,9 +49,9 @@ export class ContactUsService {
     };
     const total = await this.contactUsModel.countDocuments(queryExpress);
     const list = await this.contactUsModel
-      .find(queryExpress, selectFields)
+      .find(queryExpress)
       .limit(pageSize)
-      .sort({ updatedAt: -1 })
+      .sort({ order: -1 })
       .skip(pageSize * (current - 1));
     return {
       page: {
@@ -75,7 +64,7 @@ export class ContactUsService {
   }
 
   async findOne(_id: string): Promise<ContactUsDocument | null> {
-    return await this.contactUsModel.findById({ _id }, selectFields);
+    return await this.contactUsModel.findById({ _id });
   }
 
   async update(_id: string, updateContactUsDto: UpdateContactUsDto) {

@@ -23,7 +23,7 @@ export class Product {
    * 类型id
    */
   @Prop({
-    required: true,
+    required: false,
     type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Type" }],
   })
   type: Type[];
@@ -31,26 +31,26 @@ export class Product {
    * 产品标签
    */
   @Prop({
-    required: true,
+    required: false,
     type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Label" }],
   })
   label: Label[];
   /**
    * 产品主图
    */
-  @Prop({ required: true })
+  @Prop({ required: false })
   mainPictureUrl: string;
   /**
    * 产品描述
    */
-  @Prop({ required: true })
+  @Prop({ required: false })
   description: string;
   /**
    * 上线时间
    */
-  @Prop({ required: true, type: Date })
+  @Prop({ required: false, type: Date })
   releaseDate_start: Date;
-  @Prop({ required: true, type: Date })
+  @Prop({ required: false, type: Date })
   releaseDate_end: Date;
   /**
    * 总集数
@@ -71,31 +71,36 @@ export class Product {
   /**
    * 授权信息 - 授权性质
    */
-  @Prop({ required: true })
+  @Prop({ required: false })
   authorizationInformation_property: IAuthorizationInformation_property;
 
   /**
    * 授权信息 -- 首发平台
    */
-  @Prop({ required: true })
+  @Prop({ required: false })
   authorizationInformation_firstLaunchPlatform: number;
 
   /**
    * 授权信息 -- 范围
    */
-  @Prop({ required: true })
+  @Prop({ required: false })
   authorizationInformation_scope: IAuthorizationInformation_scope;
 
   /**
    * 授权信息 -- 变现方式
    */
-  @Prop({ required: true })
+  @Prop({ required: false })
   authorizationInformation_monetizationMethods: IAuthorizationInformation_monetizationMethods;
   /**
    * 试看地址
    */
-  @Prop({ required: true })
+  @Prop({ required: false })
   pilotVideoAddress: string;
+  /**
+   * 评级
+   */
+  @Prop({ required: false })
+  level: string;
   /**
    * 顺序(越大越靠前)
    */

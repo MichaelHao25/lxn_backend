@@ -48,7 +48,7 @@ export class ProductAttachmentService {
       .find(queryExpress)
       .limit(pageSize)
       .skip((current - 1) * pageSize)
-      .sort({ updatedAt: -1 });
+      .sort({ order: -1 });
     const list = await Promise.all(
       res.map(async (item) => {
         const { updatedAt, product_id, productType_id, url, _id, name } = item;

@@ -1,3 +1,4 @@
+import { Type } from "class-transformer";
 import { IsArray, IsOptional, IsString, IsUrl } from "class-validator";
 
 export class CreateNewsDto {
@@ -8,7 +9,8 @@ export class CreateNewsDto {
   @IsOptional()
   type?: string;
   @IsArray()
-  label: string[];
+  @IsOptional()
+  label?: string[];
   /**
    * 产品标题
    */
@@ -18,15 +20,24 @@ export class CreateNewsDto {
    * 产品主图
    */
   @IsUrl()
-  mainPictureUrl: string;
+  @IsOptional()
+  mainPictureUrl?: string;
   /**
    * 产品描述
    */
   @IsString()
-  description: string;
+  @IsOptional()
+  description?: string;
   /**
    * 产品详情
    */
   @IsString()
-  details: string;
+  @IsOptional()
+  details?: string;
+  /**
+   * 顺序(越大越靠前)
+   */
+  @IsOptional()
+  @Type(() => Number)
+  order?: number;
 }

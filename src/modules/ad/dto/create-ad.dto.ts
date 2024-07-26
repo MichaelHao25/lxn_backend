@@ -1,3 +1,4 @@
+import { Type } from "class-transformer";
 import {
   IsEnum,
   isHexColor,
@@ -50,4 +51,10 @@ export class CreateAdDto {
   })
   @IsOptional()
   backgroundColor: string;
+  /**
+   * 顺序(越大越靠前)
+   */
+  @IsOptional()
+  @Type(() => Number)
+  order?: number;
 }
