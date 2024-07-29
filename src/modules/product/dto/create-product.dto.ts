@@ -121,4 +121,9 @@ export class CreateProductDto {
   @IsOptional()
   @Type(() => Number)
   order?: number;
+  /**
+   * 游戏主题
+   */
+  @IsOptional()
+  gameTheme?: string;
 }

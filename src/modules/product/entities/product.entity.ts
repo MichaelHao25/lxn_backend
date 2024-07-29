@@ -107,6 +107,11 @@ export class Product {
   @Prop()
   order?: number;
   /**
+   * 游戏主题
+   */
+  @Prop({ required: false })
+  gameTheme: string;
+  /**
    * 更新时间
    */
   @Prop({ default: Date.now })
