@@ -1,3 +1,5 @@
 node_modules
 dist
 *.zip
+src/config/database.ts
+src/constants/index.ts
