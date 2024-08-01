@@ -3,7 +3,6 @@ import {
   IsArray,
   IsDate,
   IsEnum,
-  IsNumber,
   IsOptional,
   IsString,
   IsUrl,
@@ -61,15 +60,15 @@ export class CreateProductDto {
   /**
    * 总集数
    */
-  @IsNumber()
+  @IsString()
   @IsOptional()
-  totalEpisodes?: number;
+  totalEpisodes?: string;
   /**
    * 时长
    */
-  @IsNumber()
+  @IsString()
   @IsOptional()
-  duration?: number;
+  duration?: string;
   /**
    * 视频方向
    */
@@ -92,9 +91,9 @@ export class CreateProductDto {
   /**
    * 授权信息 -- 首发平台
    */
-  @IsNumber()
+  @IsString()
   @IsOptional()
-  authorizationInformation_firstLaunchPlatform?: number;
+  authorizationInformation_firstLaunchPlatform?: string;
   /**
    * 授权信息 -- 范围
    */

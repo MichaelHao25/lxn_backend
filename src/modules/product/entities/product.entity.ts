@@ -56,12 +56,12 @@ export class Product {
    * 总集数
    */
   @Prop({ required: false })
-  totalEpisodes: number;
+  totalEpisodes: string;
   /**
    * 时长
    */
   @Prop({ required: false })
-  duration: number;
+  duration: string;
   /**
    * 视频方向
    */
@@ -78,7 +78,7 @@ export class Product {
    * 授权信息 -- 首发平台
    */
   @Prop({ required: false })
-  authorizationInformation_firstLaunchPlatform: number;
+  authorizationInformation_firstLaunchPlatform: string;
 
   /**
    * 授权信息 -- 范围

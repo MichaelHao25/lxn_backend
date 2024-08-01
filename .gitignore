@@ -3,3 +3,4 @@ dist
 *.zip
 src/config/database.ts
 src/constants/index.ts
+*.pdf
